@@ -1,0 +1,21 @@
+# frontend
+- react
+    - landing page
+        - choose to sell
+        - choose to buy
+        - list the top traded card
+        - most viewed card
+    - listing page
+        - search cards
+        - display all cards
+    - individual detail page
+        - auction
+        - view price
+        - place price
+        - view details
+        - price history
+    - login to the wallet
+    - 盲盒 （optional）
+    - my card page
+- eth.js
+    - connect to wallet
