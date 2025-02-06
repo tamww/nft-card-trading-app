@@ -1,0 +1,35 @@
+{
+    "attributes": [
+      {
+        "trait_type": "Background",
+        "value": "Pink"
+      },
+      {
+        "trait_type": "Skin",
+        "value": "Blue"
+      },
+      {
+        "trait_type": "Body",
+        "value": "Pjs Stripes Pink"
+      },
+      {
+        "trait_type": "Face",
+        "value": "Shades Yellow"
+      },
+      {
+        "trait_type": "Left Flipper",
+        "value": "None"
+      },
+      {
+        "trait_type": "Head",
+        "value": "Mohawk Purple"
+      },
+      {
+        "trait_type": "Right Flipper",
+        "value": "Plushie Red"
+      }
+    ],
+    "description": "Lil Pudgys are a collection of 22,222 randomly generated NFTs minted on Ethereum.",
+    "image": "https://api.pudgypenguins.io/lil/image/10690",
+    "name": "Lil Pudgy #10690"
+  }

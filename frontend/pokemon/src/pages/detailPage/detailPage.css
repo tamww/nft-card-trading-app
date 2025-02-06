@@ -1,0 +1,26 @@
+
+.detail-nftCard{
+    width:90%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    /* border-radius: 20px; */
+    /* box-shadow: 10px 10px 10px 10px rgb(0, 0, 0); */
+}
+
+.detail-nftCard-holder{
+    /* background-color:black; */
+    margin:20px auto;
+    width:90%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    border-radius:15px;
+    background-color: white;
+    /* border:solid; */
+    /* border-width:0.5px; */
+}
+
+.detail-collapse{
+    margin-bottom: 24px;
+    /* background: token.colorFillAlter, */
+    border-radius: 10px,
+    /* border: 'none', */
+}
