@@ -58,7 +58,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            PokeAuction ©{new Date().getFullYear()} Created by Jacky TAM, Zhen YANG
           </Footer>
           <FloatButton.BackTop visibilityHeight={0}/>
         </Layout>

@@ -24,3 +24,12 @@
     border-radius: 10px,
     /* border: 'none', */
 }
+
+.detail-card-countdown{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh; */
+    height:100%;
+    /* background-color: aqua; */
+}

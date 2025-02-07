@@ -1,5 +1,5 @@
 import {
-  Tabs, Typography, Divider
+  Space, Typography, Divider
 } from 'antd';
 import "./landingPage.css"
 import CardListing from '../../components/cardListing/cardListing';
@@ -16,9 +16,13 @@ export default function LandingPage () {
       // </div>
       <div >
         <div className="landing-pic">
-          <Text className="landing-title landing-pic-text">PokeAuction</Text>
-          <Text className="landing-title landing-pic-text">PokeAuction</Text>
-          <Text className="landing-pic-text landing-desc">The best pokemon trading NFT platform</Text>
+          <Space size="large">
+            <div>
+              <Text className="landing-title landing-pic-text">PokeAuction</Text>
+              <Text className="landing-title landing-pic-text">PokeAuction</Text>
+            </div>
+            <Text className="landing-pic-text landing-desc">The best pokemon trading NFT platform</Text>
+          </Space>
           <div className="landing-down-arrow"></div>
           <div className="landing-background landing-pic"/>
         </div>

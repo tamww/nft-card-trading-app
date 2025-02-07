@@ -4,6 +4,8 @@ import {Route, Routes} from "react-router-dom";
 import LandingPage from "../../pages/landingPage/landingPage.jsx"
 import NotFoundPage from "../common/notFoundPage.jsx";
 import CardDetailPage from "../../pages/detailPage/detailPage.jsx";
+import TradePage from "../../pages/tradePage/tradePage.jsx";
+import AuctionPage from "../../pages/AuctionPage/AuctionPage.jsx";
 
 /*set of router data */
 const Routesdata = [
@@ -26,6 +28,20 @@ const Routesdata = [
     path: "/main/card/:id",
     name: "CardDetailPage",
     component: <CardDetailPage />,
+    layout: "/main",
+    cName: "side-text",
+  },
+  {
+    path: "/main/trade",
+    name: "TradePage",
+    component: <TradePage />,
+    layout: "/main",
+    cName: "side-text",
+  },
+  {
+    path: "/main/auction",
+    name: "AuctionPage",
+    component: <AuctionPage />,
     layout: "/main",
     cName: "side-text",
   },

@@ -39,6 +39,6 @@
 
 # things to generate and store
 - IPFS
-    - generate 50 cards
-    - generate 50 traits
+    - generate 20 cards
+    - generate 20 traits
     - all store in IPFS

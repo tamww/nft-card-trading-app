@@ -43,7 +43,7 @@ export default function Navigation (){
     useEffect(()=>{
         if(window.location.pathname !== "/main"){
             var _item = navItem.slice(1).filter(x=> window.location.pathname.startsWith(x.path))[0]
-            console.log(_item)
+            // console.log(_item)
             if(_item){
                 setMenuKey([_item.key])
             }else{
@@ -70,7 +70,7 @@ export default function Navigation (){
             <Col span={1} className="navigation-col">
                 <div className="demo-logo" />
             </Col>
-            <Col span={9} className="navigation-col">
+            <Col span={8} className="navigation-col">
                 <Text className="navigation-title"> PokeAuction</Text>
             </Col>
             <Col span={10} className="navigation-col">
@@ -84,9 +84,8 @@ export default function Navigation (){
                     onSelect={item=>{menuItem(item)}}
                 />
             </Col>
-            <Col span={3} className="navigation-col">
-                {/* <EtherConnector/> */}
-                <Button>Connect to Wallet</Button>
+            <Col span={5} className="navigation-col">
+                <EtherConnector enable={false}/>
             </Col>
         </Row>
     )

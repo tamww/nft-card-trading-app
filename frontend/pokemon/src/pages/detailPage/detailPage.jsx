@@ -4,13 +4,23 @@ import {
 import { 
     Divider, Space, Splitter,
     Collapse, theme, Typography,
-    Statistic, Card
+    Statistic, Card, Tag,
+    InputNumber, Tooltip, Button,
+    ConfigProvider, notification
 } from 'antd';
+
 import { 
     CryptoPrice, NFTImage, NFTCard
 } from '@ant-design/web3'
+
 import { useParams } from 'react-router-dom';
+
 import { BitcoinCircleColorful } from '@ant-design/web3-icons';
+import {
+    DollarOutlined
+} from '@ant-design/icons';
+
+import { createStyles } from 'antd-style';
 
 import fakeData from '../../testingData/fakeNFT.json'
 
@@ -21,10 +31,48 @@ const { Paragraph, Title, Text } = Typography;
 const { Countdown } = Statistic;
 const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 211 + 1000 * 30; // Dayjs is also OK
 
+const useStyle = createStyles(({ prefixCls, css }) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: '';
+        background: linear-gradient(135deg, #6253e1, #04befe);
+        position: absolute;
+        inset: -1px;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+  `,
+}));
+
 export default function CardDetailPage(){
     let { id } = useParams();
 
     const { token } = theme.useToken();
+    const { styles } = useStyle();
+
+    const [api, contextHolder] = notification.useNotification();
+    function openNotification(pauseOnHover, type){
+      api[type]({
+        message: 'Notification Title',
+        description:
+          'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+        showProgress: true,
+        pauseOnHover,
+      });
+    };
+
+
 
     const panelStyleLeft = {
         // marginBottom: 30,
@@ -111,10 +159,15 @@ export default function CardDetailPage(){
         ]
     }
 
+    function buyNow(){
+        openNotification(true, 'success')
+    }
+
 
     return(
-        <div style={{marginTop:"20px"}}>
-
+        <div style={{marginTop:"5px"}}>
+            <div style={{marginTop:"-20px", height:"20px", backgroundColor:"whitesmoke"}}/>
+        {contextHolder}
         <Splitter
             style={{
             // height: 200,
@@ -180,17 +233,97 @@ export default function CardDetailPage(){
                         margin:"10px auto"
                     }}
                 >
-                    <Title>{nftObj.name}</Title>
-                    <Title></Title>
-                    {/* <div className="detail-nftCard"> */}
-                    <Card style={{width:"300px"}}>
-                        <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Time Remain"}</Text><br/>
-                        <Text>{"(Hrs : Mins : Secs)"}</Text>
-                        <Countdown 
-                            value={deadline} 
-                            format="HH:mm:ss" 
-                        />
-                    </Card>
+                    <div>
+                        <Text 
+                            style={{fontSize:"50px", fontWeight:"20px"}}
+                        >
+                            {nftObj.name + " "}
+                        </Text>
+                        <Tag 
+                            bordered={false} 
+                            color="processing"
+                            style={{fontSize:"30px", lineSize:"30px"}}
+                        >
+                            {"#" + nftObj.key}
+                        </Tag>
+                        <br/>
+                        <Text
+                            style={{fontSize:"15px"}}
+                        >
+                            Owned by
+                        </Text>
+                    </div>
+
+                    <ProCard
+                        split='vertical'
+                        bordered
+                        headerBordered
+                    >
+                        <ProCard colSpan="60%">
+                            <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Current Best Price"}</Text><br/>
+                            <BitcoinCircleColorful />
+                            <Text 
+                                style={{
+                                    // fontWeight:"500", 
+                                    fontSize:"20px",
+                                    marginLeft:"10px"
+                                    }}
+                            >
+                                {BigInt(nftObj.price).toString()}
+                            </Text>
+                            <Divider/>
+                            <InputNumber
+                                suffix="ETH"
+                                style={{
+                                    width: '70%'
+                                }}
+                            />
+                            <Divider/>
+                            <div 
+                                style={{
+                                    width:"100%",
+                                    textAlign:"center"
+                                }}
+                            >
+                                <ConfigProvider
+                                    button={{
+                                        className: styles.linearGradientButton,
+                                    }}
+                                >
+                                    <Button 
+                                        type="primary" 
+                                        size="large" 
+                                        icon={<DollarOutlined />}
+                                        style={{margin:"0 auto"}}
+                                        onClick={()=>buyNow()}
+                                    >
+                                        Make An Offer / Buy Now
+                                    </Button>
+
+                                </ConfigProvider>
+                            </div>
+                        </ProCard>
+                        <ProCard className='detail-card-countdown'>
+                            <div 
+                                style={{
+                                    width:"fit-content",
+                                    height:"50%",
+                                    margin:"0 auto",
+                                    marginTop:"50%"
+                                }}
+                            >
+                                <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Time Remain"}</Text><br/>
+                                <Text>{"(Hrs : Mins : Secs)"}</Text>
+                                <Countdown 
+                                    value={deadline} 
+                                    format="HH:mm:ss" 
+                                />
+                            </div>
+
+                        </ProCard>
+
+                    </ProCard>
+
 
                     <Collapse
                         size="large"
@@ -205,14 +338,13 @@ export default function CardDetailPage(){
                     />
 
                     <br/>
-                    {/* </div> */}
 
                 </Space>
             </Splitter.Panel>
         </Splitter>
 
 
-            <Divider/>
+        <Divider/>
         </div>
     )
 }
