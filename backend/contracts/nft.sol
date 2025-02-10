@@ -1,63 +1,40 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.8;
+pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract PokemonNFT is ERC721, Ownable {
+contract PokemonCard is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
-    // 定义宝可梦属性
-    struct PokemonMetadata {
-        string name;
-        string imageURL;
-        string description;
-        string attribute; // 如 Grass, Fire 等
-    }
+    // 正确初始化 Ownable
+    constructor() 
+        ERC721("PokemonCard", "PKMN")   // 初始化 ERC721
+        Ownable(msg.sender)             // 传递初始所有者地址
+    {}
 
-    // 存储每个 tokenId 对应的元数据
-    mapping(uint256 => PokemonMetadata) private _tokenMetadata;
-
-    constructor() ERC721("PokemonCards", "POKE") {}
-
-    // 仅合约所有者可铸造
+    /// @notice 安全铸造函数
     function safeMint(
         address to,
-        string memory name,
-        string memory imageURL,
-        string memory description,
-        string memory attribute
-    ) external onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
+        string memory ipfsCID
+    ) external onlyOwner returns (uint256) {
+        _validateCID(ipfsCID);
+
         _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter.current();
+        
         _safeMint(to, tokenId);
-        _tokenMetadata[tokenId] = PokemonMetadata(name, imageURL, description, attribute);
+        _setTokenURI(tokenId, string(abi.encodePacked("ipfs://", ipfsCID)));
+        
+        return tokenId;
     }
 
-    // 获取元数据
-    function getMetadata(uint256 tokenId) public view returns (
-        string memory name,
-        string memory imageURL,
-        string memory description,
-        string memory attribute
-    ) {
-        require(_exists(tokenId), "Token does not exist");
-        PokemonMetadata memory data = _tokenMetadata[tokenId];
-        return (data.name, data.imageURL, data.description, data.attribute);
-    }
-
-    // 支持 ERC721 的 tokenURI
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
-        // 返回 JSON 格式的元数据（需前端解析）
-        return string(abi.encodePacked(
-            "data:application/json;utf8,", 
-            '{"name": "', _tokenMetadata[tokenId].name, 
-            '", "image": "', _tokenMetadata[tokenId].imageURL, 
-            '", "description": "', _tokenMetadata[tokenId].description, 
-            '", "attribute": "', _tokenMetadata[tokenId].attribute, '"}'
-        ));
+    /// @notice CID 格式验证
+    function _validateCID(string memory cid) private pure {
+        bytes memory cidBytes = bytes(cid);
+        require(cidBytes.length == 46, "Invalid CID length");
+        require(cidBytes[0] == 'Q' && cidBytes[1] == 'm', "Invalid CID prefix");
     }
 }
