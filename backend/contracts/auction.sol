@@ -1,91 +1,170 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.8;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract PokemonMarket is ReentrancyGuard, Ownable {
-    IERC721 public nftContract;
-
-    // 上架信息
-    struct Listing {
-        address seller;
-        uint256 price;
-        bool isAuction;
-        uint256 auctionEndTime;
-        address highestBidder;
-        uint256 highestBid;
+contract PokemonMarketplace is ReentrancyGuard, AccessControl {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    
+    enum SaleType { FixedPrice, DutchAuction }
+    
+    struct DutchAuctionConfig {
+        uint256 startPrice;
+        uint256 endPrice;
+        uint256 duration;
+        uint256 startTime;
     }
 
-    mapping(uint256 => Listing) public listings;
+    struct Listing {
+        address seller;
+        SaleType saleType;
+        uint256 fixedPrice;
+        DutchAuctionConfig dutchConfig;
+    }
 
-    event Listed(uint256 tokenId, address seller, uint256 price, bool isAuction);
-    event Sold(uint256 tokenId, address buyer, uint256 price);
-    event AuctionEnded(uint256 tokenId, address winner, uint256 price);
+    // 安全状态变量
+    bool public paused;
+    IERC721 public immutable nftContract;
+    
+    // 存储结构
+    mapping(uint256 => Listing) public listings;
+    mapping(address => bytes32) public commitHashes;
+
+    // 事件日志
+    event Listed(uint256 indexed tokenId, SaleType saleType);
+    event Sold(uint256 indexed tokenId, address buyer);
+    event EmergencyPaused(address indexed admin);
+    event EmergencyWithdraw(uint256 indexed tokenId);
+
 
     constructor(address _nftAddress) {
         nftContract = IERC721(_nftAddress);
+        // 初始化角色
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender); // 必须设置默认管理员
+        _grantRole(ADMIN_ROLE, msg.sender);         // 授予ADMIN_ROLE
     }
 
-    // 上架（固定价格）
-    function listForSale(uint256 tokenId, uint256 price) external {
+
+    // ======================
+    // 核心交易功能
+    // ======================
+
+    /// @notice 上架NFT（带荷兰拍卖支持）
+    function listItem(
+        uint256 tokenId,
+        SaleType saleType,
+        uint256 initialPrice,
+        uint256 endPrice,
+        uint256 duration
+    ) external whenNotPaused {
         require(nftContract.ownerOf(tokenId) == msg.sender, "Not owner");
-        require(price > 0, "Price must be > 0");
-        listings[tokenId] = Listing(msg.sender, price, false, 0, address(0), 0);
-        emit Listed(tokenId, msg.sender, price, false);
+        require(initialPrice > 0, "Invalid price");
+
+        DutchAuctionConfig memory config;
+        if (saleType == SaleType.DutchAuction) {
+            require(endPrice < initialPrice, "End price must be lower");
+            require(duration > 0, "Invalid duration");
+            config = DutchAuctionConfig(initialPrice, endPrice, duration, block.timestamp);
+        }
+
+        listings[tokenId] = Listing({
+            seller: msg.sender,
+            saleType: saleType,
+            fixedPrice: initialPrice,
+            dutchConfig: config
+        });
+
+        nftContract.transferFrom(msg.sender, address(this), tokenId);
+        emit Listed(tokenId, saleType);
     }
 
-    // 购买（固定价格）
-    function buy(uint256 tokenId) external payable nonReentrant {
+    /// @notice 荷兰拍卖价格计算
+    function calculateDutchPrice(uint256 tokenId) public view returns (uint256) {
         Listing storage listing = listings[tokenId];
-        require(msg.value >= listing.price, "Insufficient funds");
-        require(!listing.isAuction, "Use auction functions");
-        nftContract.safeTransferFrom(listing.seller, msg.sender, tokenId);
-        payable(listing.seller).transfer(msg.value);
-        delete listings[tokenId];
-        emit Sold(tokenId, msg.sender, msg.value);
+        require(listing.saleType == SaleType.DutchAuction, "Not Dutch auction");
+        
+        DutchAuctionConfig memory config = listing.dutchConfig;
+        uint256 elapsed = block.timestamp - config.startTime;
+        
+        if (elapsed >= config.duration) return config.endPrice;
+        
+        uint256 priceRange = config.startPrice - config.endPrice;
+        uint256 currentPrice = config.startPrice - (priceRange * elapsed / config.duration);
+        
+        return currentPrice;
     }
 
-    // 上架拍卖
-    function startAuction(uint256 tokenId, uint256 duration, uint256 startingPrice) external {
-        require(nftContract.ownerOf(tokenId) == msg.sender, "Not owner");
-        require(duration > 0, "Duration must be > 0");
-        listings[tokenId] = Listing(
-            msg.sender,
-            startingPrice,
-            true,
-            block.timestamp + duration,
-            address(0),
-            startingPrice
+    // ======================
+    // 安全交易流程
+    // ======================
+
+    /// @notice 提交交易哈希（防抢跑）
+    function commitTrade(bytes32 hashedData) external {
+        commitHashes[msg.sender] = hashedData;
+    }
+
+    /// @notice 执行购买（带揭示机制）
+    function executePurchase(
+        uint256 tokenId,
+        uint256 bidValue,
+        bytes32 secret
+    ) external payable nonReentrant whenNotPaused {
+        // 验证揭示数据
+        require(
+            keccak256(abi.encodePacked(bidValue, secret)) == commitHashes[msg.sender],
+            "Invalid reveal"
         );
-        emit Listed(tokenId, msg.sender, startingPrice, true);
+        
+        Listing storage listing = listings[tokenId];
+        uint256 requiredPrice = (listing.saleType == SaleType.DutchAuction)
+            ? calculateDutchPrice(tokenId)
+            : listing.fixedPrice;
+
+        require(msg.value >= requiredPrice, "Insufficient funds");
+        
+        // 执行转账
+        _safeTransfer(tokenId, msg.sender);
+        
+        // 资金处理
+        payable(listing.seller).transfer(requiredPrice);
+        if (msg.value > requiredPrice) {
+            payable(msg.sender).transfer(msg.value - requiredPrice);
+        }
+        
+        emit Sold(tokenId, msg.sender);
     }
 
-    // 出价（拍卖）
-    function bid(uint256 tokenId) external payable nonReentrant {
-        Listing storage listing = listings[tokenId];
-        require(listing.isAuction, "Not an auction");
-        require(block.timestamp < listing.auctionEndTime, "Auction ended");
-        require(msg.value > listing.highestBid, "Bid too low");
-        // 退回前一个最高出价
-        if (listing.highestBidder != address(0)) {
-            payable(listing.highestBidder).transfer(listing.highestBid);
-        }
-        listing.highestBidder = msg.sender;
-        listing.highestBid = msg.value;
+    // ======================
+    // 安全控制功能
+    // ======================
+
+    /// @notice 紧急暂停合约
+    function emergencyPause() external onlyRole(ADMIN_ROLE) {
+        paused = true;
+        emit EmergencyPaused(msg.sender);
     }
 
-    // 结束拍卖
-    function endAuction(uint256 tokenId) external nonReentrant {
-        Listing storage listing = listings[tokenId];
-        require(block.timestamp >= listing.auctionEndTime, "Auction ongoing");
-        require(msg.sender == listing.seller, "Not seller");
-        if (listing.highestBidder != address(0)) {
-            nftContract.safeTransferFrom(listing.seller, listing.highestBidder, tokenId);
-            payable(listing.seller).transfer(listing.highestBid);
-            emit AuctionEnded(tokenId, listing.highestBidder, listing.highestBid);
-        }
+    /// @notice 紧急取回NFT
+    function emergencyWithdraw(uint256 tokenId) external onlyRole(ADMIN_ROLE) {
+        require(listings[tokenId].seller != address(0), "Item not listed");
+        _safeTransfer(tokenId, listings[tokenId].seller);
         delete listings[tokenId];
+        emit EmergencyWithdraw(tokenId);
+    }
+
+    // ======================
+    // 内部工具函数
+    // ======================
+
+    function _safeTransfer(uint256 tokenId, address to) private {
+        nftContract.transferFrom(address(this), to, tokenId);
+        delete listings[tokenId];
+    }
+
+    modifier whenNotPaused() {
+        require(!paused, "Contract paused");
+        _;
     }
 }
