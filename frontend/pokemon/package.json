@@ -1,7 +1,8 @@
 {
   "name": "pokemon",
+  "homepage": "/main",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,10 +11,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/pro-components": "^2.8.4",
+    "@ant-design/web3": "^1.20.0",
+    "@ant-design/web3-ethers": "^1.1.15",
     "antd": "^5.23.3",
+    "antd-style": "^3.7.1",
+    "axios": "^1.7.9",
+    "ethers": "^6.13.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.1.5",
+    "universal-cookie": "^7.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -26,5 +34,10 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "vite": "^6.0.5"
-  }
+  },
+  "devServer": {
+    "historyApiFallback": true
+  },
+  "strict": false,
+  "noImplicitUseStrict": true
 }

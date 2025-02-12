@@ -1,0 +1,11 @@
+.nftCard:hover{
+    /* box-shadow: 5px 5px 5px 5px whitesmoke; */
+    /* background-color: red; */
+    cursor: pointer;
+}
+
+.nftCard{
+    margin:5px;
+    /* border-radius: 20px; */
+    /* width:50px; */
+}

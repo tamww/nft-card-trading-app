@@ -1,0 +1,47 @@
+{
+    "name": "Frostloom",
+    "description": "A ghostly, ice-covered Pokémon resembling a floating wraith wrapped in a tattered icy cloak. Its glowing blue eyes peer through the mist as frost swirls around its spectral hands. The background features a frozen graveyard under a full moon, with eerie fog creeping across the battlefield. The Pokémon card design includes icy textures and ghostly wisps, with Ice and Ghost energy symbols on the corners.",
+    "image": "https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/bafybeia3pphj277spnl5jhdy4oa6bzkfsctpc5xrxoaz2fzjyqx6tmju2e",
+    "attributes": [
+      {
+        "trait_type": "Type",
+        "value": ["Ice", "Ghost"]
+      },
+      {
+        "trait_type": "EvoluationStage",
+        "value": "2"
+      },
+      {
+        "trait_type": "EvoluationFrom",
+        "value": "Chillshade"
+      },
+      {
+        "trait_type": "HP",
+        "value": "130"
+      },
+      {
+        "trait_type": "CardNumber",
+        "value": "088"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "3"
+      },
+      {
+        "trait_type": "Attack",
+        "value": [
+          {
+            "Name": "Frozen Grip",
+            "Points": "50",
+            "Effect": "❄️ The Defending Pokémon can't retreat during your opponent's next turn."
+          },
+          {
+            "Name": "Haunting Blizzard",
+            "Points": "90",
+            "Effect": "❄️🌑 Haunting Blizzard (90) – If your opponent's Pokémon is Paralyzed or Asleep, this attack does 40 more damage."
+
+          }
+        ]
+      }
+    ]
+  }

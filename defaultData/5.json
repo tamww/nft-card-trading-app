@@ -1,0 +1,46 @@
+{
+    "name": "Terradon",
+    "description": "A massive, rock-armored pterosaur Pokémon with jagged stone wings and a glowing gemstone in its forehead. It soars above an ancient canyon as dust storms swirl beneath it. Its wings leave a trail of stone debris as it flaps powerfully. The card features a cracked stone border, with Rock and Flying energy symbols glowing in the background.",
+    "image": "https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/bafybeigfztaqqutt2dgj2e76xmvoljpyvnh4immv7yyjtw3zfofj3xdphi",
+    "attributes": [
+      {
+        "trait_type": "Type",
+        "value": ["Rock", "Flying"]
+      },
+      {
+        "trait_type": "EvoluationStage",
+        "value": "1"
+      },
+      {
+        "trait_type": "EvoluationFrom",
+        "value": "Stonewing"
+      },
+      {
+        "trait_type": "HP",
+        "value": "150"
+      },
+      {
+        "trait_type": "CardNumber",
+        "value": "099"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "3"
+      },
+      {
+        "trait_type": "Attack",
+        "value": [
+          {
+            "Name": "Ancient Crush",
+            "Points": "60",
+            "Effect": "🪨 If the opponent's Pokémon is Electric-type, this attack does 30 more damage."
+          },
+          {
+            "Name": "Skyquake",
+            "Points": "100",
+            "Effect": "🪨💨 Discard the top 2 cards of your deck."
+          }
+        ]
+      }
+    ]
+  }

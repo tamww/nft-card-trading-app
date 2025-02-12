@@ -1,57 +1,94 @@
-import React, { Component } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
-    Breadcrumb, Layout, Menu, 
-    theme, Col, Row
+    Menu, Col, Row,
+    Typography, Button
 } from 'antd';
-// import EtherConnector from '../etherConnect/ether.jsx'
+import EtherConnector from '../etherConnect/etherConnect';
+import "./navigation.css";
+import EtherConnectorW from '../etherConnect/walletConnect';
 
-const { Header, Content, Footer } = Layout;
-const items = new Array(3).fill(null).map((_, index) => ({
-  key: String(index + 1),
-  label: `nav ${index + 1}`,
-}));
+
+const { Text } = Typography;
+
+const navItem = [
+    {
+        key:"0",
+        label:"Home",
+        path:"/main"
+    },
+    {
+        key:"1",
+        label:"Trade",
+        path:"/main/trade"
+    },
+    {
+        key:"2",
+        label:"Auction",
+        path:"/main/auction"
+    },
+    {
+        key:"3",
+        label:"Create Order",
+        path:"/main/createOrder"
+    },
+    {
+        key:"4",
+        label:"My Card",
+        path:"/main/myCard"
+    }
+]
+
 
 export default function Navigation (){
+    useEffect(()=>{
+        if(window.location.pathname !== "/main"){
+            var _item = navItem.slice(1).filter(x=> window.location.pathname.startsWith(x.path))[0]
+            // console.log(_item)
+            if(_item){
+                setMenuKey([_item.key])
+            }else{
+                setMenuKey([])
+            }
+            
+        }else{
+            setMenuKey(['0'])
+        }
+
+    },[window.location.pathname])
+
+    const [menuKey, setMenuKey] = useState(['0'])
+    const navigate = useNavigate();
+    function menuItem(item){
+        var _item = navItem.filter(x=> x.key == item.selectedKeys[0])[0]
+        // console.log(_item)
+        setMenuKey(item.selectedKeys)
+        // console.log(_item.path)
+        navigate(_item.path)
+    }
     return (
-        <Row 
-            gutter={[16, 16]}
-            style={{
-                width:'inherit',
-                height:"50px",
-                backgroundColor:"red"
-                }}
-        >
-            <Col span={15}>
-            <div className="demo-logo" />
+        <Row className="navigation-row">
+            <Col span={1} className="navigation-col">
+                <div className="demo-logo" />
             </Col>
-            <Col span={6}>
-                    <Menu
-                        theme="light"
-                        mode="horizontal"
-                        defaultSelectedKeys={['2']}
-                        items={items}
-                        style={{
-                            height:"inherit",
-                            backgroundColor:"transparent",
-                        }}
-                    />
+            <Col span={8} className="navigation-col">
+                <Text className="navigation-title"> PokeAuction</Text>
             </Col>
-            <Col span={3}>
-                {/* <EtherConnector/> */}
+            <Col span={10} className="navigation-col">
+                <Menu
+                    theme="light"
+                    mode="horizontal"
+                    defaultSelectedKeys={['0']}
+                    items={navItem}
+                    className="navigation-menu"
+                    selectedKeys={menuKey}
+                    onSelect={item=>{menuItem(item)}}
+                />
             </Col>
-
+            <Col span={5} className="navigation-col">
+                {/* <EtherConnector enable={false}/> */}
+                <EtherConnectorW/>
+            </Col>
         </Row>
-    //     <Header
-    //     style={{
-    //       position: 'sticky',
-    //       top: 0,
-    //       zIndex: 1,
-    //       width: '100%',
-    //       display: 'flex',
-    //       alignItems: 'center',
-    //     }}
-    //   >
-
-    //   </Header>
     )
 }
