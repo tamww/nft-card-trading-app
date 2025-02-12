@@ -70,6 +70,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     //******************************************************//
     // uint256 public constant DURATION = 7 days;
     uint256 public constant ONE_ETHER = 1 ether;
+    uint256 public constant ONE_HOUR = 1 hours;
     bool public paused = false;
     PokemonCard public metadataContract;
 
@@ -138,7 +139,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
             saleType,
             tokenId,
             block.timestamp,
-            block.timestamp + duration,
+            block.timestamp + duration * ONE_HOUR,
             duration,
             initialPrice * ONE_ETHER,
             endPrice * ONE_ETHER,
@@ -153,7 +154,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         emit TradeStarted(
             tokenId,
             block.timestamp,
-            block.timestamp + duration,
+            block.timestamp + duration * ONE_HOUR,
             duration,
             initialPrice * ONE_ETHER,
             endPrice * ONE_ETHER,
@@ -165,11 +166,11 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         return _list;
     }
 
-    /// @notice calculate price for dutch auction
-    function calculateDutchPrice(uint256 tokenId) public view whenNotPaused returns (uint256) {
+    /// @notice return price for either trade type
+    function calculatePrice(uint256 tokenId) public view returns (uint256) {
         Listing memory _dutch = listings[tokenId];
-        require(_dutch.saleType == SaleType.DutchAuction, "Not Dutch auction");
-        require(_dutch.isActive, "Dutch: Not active");
+        // require(_dutch.saleType == SaleType.DutchAuction, "Not Dutch auction");
+        // require(_dutch.isActive, "Dutch: Not active");
 
         if(block.timestamp <= _dutch.startTime){
             return _dutch.startPrice;
@@ -179,8 +180,14 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
             return _dutch.endPrice;
         }
 
+        uint256 priceRange = _dutch.startPrice - _dutch.endPrice;
+
+        if(priceRange ==0){
+            return _dutch.startPrice;
+        }
+
         uint256 elapsed = block.timestamp - _dutch.startTime;
-        uint256 priceDrop = (_dutch.startPrice - _dutch.endPrice) * elapsed / (_dutch.endTime - _dutch.startTime);
+        uint256 priceDrop = priceRange * elapsed / (_dutch.endTime - _dutch.startTime);
         uint256 curPrice = _dutch.startPrice - priceDrop;
 
         return (curPrice > _dutch.endPrice)? curPrice : _dutch.endPrice;
@@ -204,9 +211,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         require(_listing.isActive, "buy nft: not on sales.");
         require(block.timestamp <= _listing.endTime, "buy nft: out of sales period");
 
-        uint256 requiredPrice = (_listing.saleType == SaleType.DutchAuction)
-            ? calculateDutchPrice(tokenId)
-            : _listing.startPrice;
+        uint256 requiredPrice = calculatePrice(tokenId);
 
         require(msg.value >= requiredPrice, "buy nft: insufficient funds.");
 
@@ -281,13 +286,18 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     //******************************************************//
     //                    Setter                            //
     //******************************************************//
-    function setPause(bool _toggle) public onlyOwner {
+    function setPause(bool _toggle) public onlyRole(ADMIN_ROLE) {
         paused = _toggle;
         metadataContract.setPauseTrigger(_toggle);
     }
 
     function _setWithdraw(uint256 amt, address user) internal {
         pendingWithdraw[user] += amt;
+    }
+
+    function setAdmin(address _newAdmin) public onlyRole(ADMIN_ROLE) {
+        _grantRole(DEFAULT_ADMIN_ROLE, _newAdmin); // default admin role
+        _grantRole(ADMIN_ROLE, _newAdmin);         // set custom ADMIN_ROLE
     }
 
     //******************************************************//

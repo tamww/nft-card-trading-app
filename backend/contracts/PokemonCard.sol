@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./ERC721URIStorage.sol";
+// import "./hardhat/console.sol";
 
-contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
+contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessControl {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
@@ -59,6 +63,8 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         ERC721("PokemonCard", "PKMN")   // initialize ERC721
         Ownable(msg.sender)             // owner address
     {        
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender); // default admin role
+        _grantRole(ADMIN_ROLE, msg.sender);         // set custom ADMIN_ROLE
         setBaseURI(baseURIS);
         // https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/
         // tokenCounter = 0;
@@ -66,24 +72,24 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         _defaultCoin();
     }
 
-    function _defaultCoin() internal onlyOwner{
+    function _defaultCoin() internal onlyRole(ADMIN_ROLE)  {
         // 1.jpg
-        mint("bafkreiaimcafbmjkksvecad5e4coyms2k3vnbm63ivvaxt6j4tktsd3ei4",
+        mint("bafkreidav26rjxft3o23zdpgaqskh3prpuqbqiwps56eacfzej7lnrhgje",
             "bafybeigywuua7rqcqitqahb3shvnogyau25pnu7pq3luq3gpmeprybiqye");
         // 2.jpg
-        mint("bafkreigorg444wyebk46bx3z43zhpv6ljl4hkeokkmhzdd55gzfimgmgxa",
+        mint("bafkreiezoni2wcimis3sroijaghzswfo57cefvjei5m4qmupbnoqe5f3gy",
             "bafybeic7b6dyjuvjvvb6v2lkwny2a6penuus2fhhviyksai32fhcomld2e"); 
         // 3.jpg
         mint("bafkreidtoxzzfjriz5gt7trfe6m7pcmhyqu5fjorvvlxyldoelni2yaxg4",
             "bafybeifikmiue25spqy4sbvb3fh56xz4eicto5236heyhwrpgfayzfm5dm");
         // 4.jpg
-        mint("bafkreiacxiu3jpsgdet3dos6tgvtzt2c6bdlhlkqxn64udbzx4qfmej4x4",
+        mint("bafkreiey3ybv4ifeaxf2tmn3u3nowxezn4mzfxfdohc2hvh5n5d5fwwwgm",
             "bafybeia3pphj277spnl5jhdy4oa6bzkfsctpc5xrxoaz2fzjyqx6tmju2e"); 
         // 5.jpg
-        mint("bafkreiftoqmyraeidouhwfzlr4nstirn47x4ocpevrkm4xpwuzy64atmli",
+        mint("bafkreihdzkn6zgq3hpsqcojkmx5jcpq33tfltbgrvbcsjlrq26leizjtue",
             "bafybeigfztaqqutt2dgj2e76xmvoljpyvnh4immv7yyjtw3zfofj3xdphi");
         // 6.jpg
-        mint("bafkreiasid4s5rocuzlwpsjpbluginzliagyiuk6jybynlmokwf4jcmrra",
+        mint("bafkreihhem5jcvwwuw267lvfejl6xmhvm4f5vvzpic75vtxnntheda2uoe",
             "bafybeih243c34x72v3jxlz56vysp52ujv6yba2uneifcjdpyltany2mk2y"); 
     }
 
@@ -166,7 +172,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
             return tokensId;
         }
         uint256 key = 0;
-        for (uint256 i = 1; i < _tokenIdCounter.current(); i++) {
+        for (uint256 i = 1; i <= _tokenIdCounter.current(); i++) {
             if(withoutBurn && burnedCoin[i]){
                 continue;
             }
@@ -186,7 +192,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         }
 
         uint256 key = 0;
-        for (uint256 i = 1; i < MAX_ELEMENTS; i++) {
+        for (uint256 i = 1; i <= MAX_ELEMENTS; i++) {
             if(ownerOf(i) == _user){
                 tokensId[key] = pokemonMetadata[i];
                 key++;
@@ -206,7 +212,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         }
 
         uint256 key = 0;
-        for (uint256 i = 1; i < MAX_ELEMENTS; i++) {
+        for (uint256 i = 1; i <= MAX_ELEMENTS; i++) {
             if(ownerOf(i) == _user){
                 tokensId[key] = i;
                 key++;
@@ -235,12 +241,15 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
 
     function getOwner(uint256 tokenId) external view returns(address){
         return pokemonMetadata[tokenId].owner;
-    }        
+    }    
 
+    function isAdmin(address account) public view returns (bool) {
+        return hasRole(DEFAULT_ADMIN_ROLE, account);
+    }
     //******************************************************//
     //                    Setter                            //
     //******************************************************//
-    function setPause(bool _toggle) public onlyOwner {
+    function setPause(bool _toggle) public onlyRole(ADMIN_ROLE) {
         paused = _toggle;
     }
 
@@ -249,12 +258,18 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         paused = _toggle;
     }
 
-    function setBaseURI(string memory baseURIs) public onlyOwner {
+    function setBaseURI(string memory baseURIs) public onlyRole(ADMIN_ROLE) {
         baseTokenURI = baseURIs;
     }
 
-    function setAuctionAddr(address _auctionAddr) public onlyOwner{
+    function setAuctionAddr(address _auctionAddr) public onlyRole(ADMIN_ROLE){
         auctionAddr = _auctionAddr;
+        setAdmin(auctionAddr);
+    }
+
+    function setAdmin(address _newAdmin) public onlyRole(ADMIN_ROLE) {
+        _grantRole(DEFAULT_ADMIN_ROLE, _newAdmin); // default admin role
+        _grantRole(ADMIN_ROLE, _newAdmin);         // set custom ADMIN_ROLE
     }
 
     function setSalesStatus(uint256 tokenId, bool _isOnSale, uint256 _cardStatus) external marketIsOpen nonReentrant{
@@ -262,4 +277,12 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard {
         pokemonMetadata[tokenId].isOnSale = _isOnSale;
         pokemonMetadata[tokenId].cardStatus = SaleType(_cardStatus);
     }
+
+    function supportsInterface(bytes4 interfaceId) 
+        public view override(AccessControl, ERC721URIStorage) 
+        returns (bool) 
+    {
+        return super.supportsInterface(interfaceId);
+    }
 }
+

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
     CryptoPrice, NFTImage
 } from '@ant-design/web3'
@@ -11,6 +11,9 @@ import {
 import { createStyles } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { BitcoinCircleColorful } from '@ant-design/web3-icons';
+import {get_trait} from "../API/APIUtil.js"
+import axios from 'axios';
+
 import './nftCard.css'
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
@@ -54,9 +57,29 @@ export default function NCard(prop){
 
     const [cardText, setCardText] = useState("Add to Cart")
     const [inCart, setInCart] = useState(false)
+    const [trait, setTrait] = useState({
+        name: "",
+        description: "",
+        image: "",
+        attributes: []
+    })
+
     const navigate = useNavigate();
     const messagekey = 'updatable';
     const { styles } = useStyle()
+
+    useEffect(()=>{
+        api_getTrait(item.tokenTraitCID)
+      }, [])
+    // api_getTrait(item.tokenTraitCID)
+    function api_getTrait(url){
+        get_trait(url).then(function(res){
+          if(res.status >= 200 && res.status <300 ){
+            setTrait(res.data)
+          }
+        })
+      }
+
     function addToCart(){
         
         if(!inCart){
@@ -71,8 +94,8 @@ export default function NCard(prop){
         setInCart(!inCart)
     }
 
-    function showCardDetail(){
-        navigate("/main/card/123")
+    function showCardDetail(id){
+        navigate("/main/card/"+id, )
     }
 
     return(
@@ -90,7 +113,7 @@ export default function NCard(prop){
             cover={
                 <NFTImage
                     width={300}
-                    src="https://mdn.alipayobjects.com/huamei_mutawc/afts/img/A*9jfLS41kn00AAAAAAAAAAAAADlrGAQ/original"
+                    src={item.tokenImageCID}
                 />
             }
             actions=
@@ -109,48 +132,12 @@ export default function NCard(prop){
                 )}
         >
             <Meta
-                onClick={()=>showCardDetail()}
+                onClick={()=>showCardDetail(parseInt(item.tokenId))}
                 // avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
-                title={item.name}
-                description={<CryptoPrice icon={<BitcoinCircleColorful />} value={BigInt(item.price)} />}
+                title={trait.name}
+                // description={<CryptoPrice icon={<BitcoinCircleColorful />} value={BigInt(item.price)} />}
             />
         </Card>
     </ConfigProvider>
-        // <Card className='nftCard' hoverable bordered>
-        //     <NFTImage
-                
-        //         width={300}
-        //     />
-
-        // </Card>
-        // <ProCard >
-        // <div
-        //     onClick={()=>{showCardDetail()}}
-        //     className='nftCard'
-        // >
-        //     <ConfigProvider theme={{ algorithm:algo }}>
-        //         <NFTCard
-                    
-        //             type="pithy"
-        //             // name={item.name}
-        //             // tokenId={item.tokenId}
-        //             price={{value: item.value}}
-        //             // like={{
-        //             // totalLikes: 1600,
-        //             // }}
-        //             // description={item.description}
-        //             showAction
-        //             actionText={cardText}
-        //             onActionClick={()=>{addToCart()}}
-        //             // footer={item.footer}
-        //             image={item.image}
-        //             // style={{margin:"10px"}}
-        //         >
-                    
-        //         </NFTCard>
-        //     </ConfigProvider>
-        // </div>
-
-
     )
 }

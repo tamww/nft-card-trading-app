@@ -66,6 +66,6 @@ abstract contract ERC721URIStorage is IERC4906, ERC721 {
     }
 
     function _exists(uint256 tokenId) internal view virtual returns (bool) {
-        return _owners[tokenId] != address(0);
+        return ownerOf(tokenId) != address(0);
     }
 }

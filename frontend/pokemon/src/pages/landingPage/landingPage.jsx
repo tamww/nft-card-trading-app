@@ -3,52 +3,32 @@ import {
 } from 'antd';
 import "./landingPage.css"
 import CardListing from '../../components/cardListing/cardListing';
-import {useReadContract,useAccount  } from 'wagmi'
-import { hardhat } from 'wagmi/chains';
-import pokeAuctionABI from "../../components/etherConnect/PokeAuctionABI.json"
-import pokeMetadataABI from "../../components/etherConnect/PokeMetadataABI.json"
-import { ethers } from 'ethers';
+// import { hardhat } from 'wagmi/chains';
+// import ABI_PokemonCard from "../../components/etherConnect/ABI_PokemonCard.json"
+// import ABI_PokemonMarketplace from "../../components/etherConnect/ABI_PokemonMarketplace.json"
+// import { ethers } from 'ethers';
 /*alias for better representation*/
 const {Text} = Typography
 
 
 export default function LandingPage () {
 
-  // const provider = ethers.getDefaultProvider();
-  // const balance = await provider.getBalance(`vitalik.eth`);
-  // console.log(`ETH Balance of vitalik: ${ethers.utils.formatEther(balance)} ETH`);
-  const abi = JSON.parse(JSON.stringify(pokeMetadataABI))
-  // const { address } = useAccount();
-  const result = useReadContract({
-              address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-              abi,
-              chainId: hardhat.id,
-              // functionName: 'getTotalSupply',
-              functionName: () => "getTotalSupply",
-              args: ["true"],
-              // enabled: !!address,
-          })
-  console.log(result)
 
+  // // if (error) console.error("Wagmi error:", error);
+  // const ethereum = window.ethereum;
 
-  // if (error) console.error("Wagmi error:", error);
-  const ethereum = window.ethereum;
-
-  ethereum
-    .request({ method: "eth_chainId" })
-    .then((chainId) => {
-      console.log(`hexadecimal string: ${chainId}`);
-      console.log(`decimal number: ${parseInt(chainId, 16)}`);
-    })
-    .catch((error) => {
-      console.error(`Error fetching chainId: ${error.code}: ${error.message}`);
-    });
+  // ethereum
+  //   .request({ method: "eth_chainId" })
+  //   .then((chainId) => {
+  //     console.log(`hexadecimal string: ${chainId}`);
+  //     console.log(`decimal number: ${parseInt(chainId, 16)}`);
+  //   })
+  //   .catch((error) => {
+  //     console.error(`Error fetching chainId: ${error.code}: ${error.message}`);
+  //   });
   
 
   return (
-      // <div style={{height:"5000px", backgroundColor:"grey"}}>
-      //   test
-      // </div>
       <div >
         <div className="landing-pic">
           <Space size="large">

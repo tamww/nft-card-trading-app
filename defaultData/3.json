@@ -31,12 +31,14 @@
         "trait_type": "Attack",
         "value": [
           {
-            "Name": "Static Claws",
-            "Points": "30"
+            "Name": "⚡ Static Claws",
+            "Points": "30",
+            "Effect": "Flip a coin. If heads, the Defending Pokémon is now Paralyzed."
           },
           {
-            "Name": "Thunder Fang",
-            "Points": "70"
+            "Name": "⚡🌑 Thunder Fang",
+            "Points": "70",
+            "Effect": "If this Pokémon has any Dark Energy attached, this attack does 20 more damage."
           }
         ]
       }

@@ -16,10 +16,12 @@
     "@ant-design/web3-ethers": "^1.1.15",
     "antd": "^5.23.3",
     "antd-style": "^3.7.1",
+    "axios": "^1.7.9",
     "ethers": "^6.13.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.1.5",
+    "universal-cookie": "^7.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

@@ -32,11 +32,13 @@
         "value": [
           {
             "Name": "Toxic Bite",
-            "Points": "40"
+            "Points": "40",
+            "Effect": "☠️ The Defending Pokémon is now Poisoned."
           },
           {
             "Name": "Mind Venom",
-            "Points": "70"
+            "Points": "70",
+            "Effect": "☠️🔮 If the opponent has a Psychic Pokémon in play, shuffle a random card from their hand into their deck."
           }
         ]
       }

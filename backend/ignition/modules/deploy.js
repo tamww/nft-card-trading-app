@@ -18,8 +18,16 @@ async function main() {
     console.log("PokemonMarketplace deployed at \n ", pokeAuction);
     console.log("> call setAuctionAddr fun")
 
-    const Factory = await ethers.getContractAt('PokemonCard', pokemonCard)
-    await Factory.setAuctionAddr(pokeAuction)
+    const pokemonCardFactory = await ethers.getContractAt('PokemonCard', pokemonCard)
+    await pokemonCardFactory.setAuctionAddr(pokeAuction)
+
+    console.log("set admin to 0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199")
+    await pokemonCardFactory.setAdmin("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199")
+    const pokeAuctionFactory = await ethers.getContractAt('PokemonMarketplace', pokeAuction)
+    await pokeAuctionFactory.setAdmin("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199")
+    await pokeAuctionFactory.listItem(1,1,1000,1,5);
+    await pokeAuctionFactory.listItem(2,2,1000,1000,5);
+
     console.log(">> Deployment done")
 }
 

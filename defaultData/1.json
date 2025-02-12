@@ -31,12 +31,14 @@
         "trait_type": "Attack",
         "value": [
           {
-            "Name": "Burning Vines",
-            "Points": "50"
+            "Name": "🔥 Burning Vines",
+            "Points": "50",
+            "Effect": "Flip a coin. If heads, the Defending Pokémon is now Burned."
           },
           {
-            "Name": "Wildfire Lash",
-            "Points": "90"
+            "Name": "🌿🔥 Wildfire Lash",
+            "Points": "90",
+            "Effect": "Discard a Fire Energy attached to this Pokémon."
           }
         ]
       }

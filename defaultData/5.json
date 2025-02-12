@@ -32,11 +32,13 @@
         "value": [
           {
             "Name": "Ancient Crush",
-            "Points": "60"
+            "Points": "60",
+            "Effect": "🪨 If the opponent's Pokémon is Electric-type, this attack does 30 more damage."
           },
           {
             "Name": "Skyquake",
-            "Points": "100"
+            "Points": "100",
+            "Effect": "🪨💨 Discard the top 2 cards of your deck."
           }
         ]
       }

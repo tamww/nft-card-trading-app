@@ -1,3 +1,9 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import './detailPage.css'
+
 import { 
     ProCard, StatisticCard
 } from '@ant-design/pro-components';
@@ -5,63 +11,75 @@ import {
     Divider, Space, Splitter,
     Collapse, theme, Typography,
     Statistic, Card, Tag,
-    InputNumber, Tooltip, Button,
-    ConfigProvider, notification
+    InputNumber, Rate, Button,
+    ConfigProvider, notification, Skeleton, 
+    Descriptions, Row, Col
 } from 'antd';
-
 import { 
     CryptoPrice, NFTImage, NFTCard
 } from '@ant-design/web3'
-
-import { useParams } from 'react-router-dom';
 
 import { BitcoinCircleColorful } from '@ant-design/web3-icons';
 import {
     DollarOutlined
 } from '@ant-design/icons';
+import {useReadContract,useAccount   } from 'wagmi'
 
-import { createStyles } from 'antd-style';
+import {get_trait} from "../../components/API/APIUtil.js"
+import * as CONSTANT_POKE from "../../components/common/CONSTANT.js"
+import NameTag from '../../components/common/nameTag.jsx';
+import PricePanel from '../../components/pricePanel/pricePanel.jsx';
 
-import fakeData from '../../testingData/fakeNFT.json'
-
-import './detailPage.css'
-
-const nftObj = fakeData[0]
 const { Paragraph, Title, Text } = Typography;
-const { Countdown } = Statistic;
-const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 211 + 1000 * 30; // Dayjs is also OK
-
-const useStyle = createStyles(({ prefixCls, css }) => ({
-  linearGradientButton: css`
-    &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
-      > span {
-        position: relative;
-      }
-
-      &::before {
-        content: '';
-        background: linear-gradient(135deg, #6253e1, #04befe);
-        position: absolute;
-        inset: -1px;
-        opacity: 1;
-        transition: all 0.3s;
-        border-radius: inherit;
-      }
-
-      &:hover::before {
-        opacity: 0;
-      }
-    }
-  `,
-}));
 
 export default function CardDetailPage(){
     let { id } = useParams();
+    const { address } = useAccount(); // Ensure address is available
 
     const { token } = theme.useToken();
-    const { styles } = useStyle();
 
     const [api, contextHolder] = notification.useNotification();
+
+    const [trait, setTrait] = useState(CONSTANT_POKE.TRAIT_BASE_OBJ)
+
+    const [nftObj, setnftObj] = useState(CONSTANT_POKE.POKEMETADATA_BASE_OBJ)
+
+    const [order, setOrder] = useState({})
+
+    const getACardData = useReadContract({
+        address: CONSTANT_POKE.POKEMONCARD_CONTRACT,
+        abi: CONSTANT_POKE.ABI_POKE_CARD,
+        chainId: CONSTANT_POKE.HARDHAT_ID,
+        functionName: "getACard", 
+        enabled: !!address, 
+        args:[1]
+    });
+    
+    console.log(id)
+    console.log(getACardData)
+    console.log(getACardData.isError)
+    console.log(getACardData.isLoading)
+
+ 
+
+    useEffect(()=>{
+        if(!getACardData.isLoading && !getACardData.isError){
+            setnftObj(getACardData.data);
+            api_getTrait(getACardData.data.tokenTraitCID)
+            // console.log(userName)
+        }
+        
+    }, [getACardData.data])
+
+    function api_getTrait(url){
+        get_trait(url).then(function(res){
+          if(res.status >= 200 && res.status < 300 ){
+            console.log(res)
+            setTrait(res.data)
+          }
+        })
+      }
+
     function openNotification(pauseOnHover, type){
       api[type]({
         message: 'Notification Title',
@@ -71,8 +89,6 @@ export default function CardDetailPage(){
         pauseOnHover,
       });
     };
-
-
 
     const panelStyleLeft = {
         // marginBottom: 30,
@@ -93,19 +109,68 @@ export default function CardDetailPage(){
             {
                 key: '1',
                 label: 'Description',
-                children: <Paragraph>{nftObj.description}</Paragraph>,
+                children: <Paragraph>{trait.description}</Paragraph>,
                 style: panelStyleLeft
             },
             {
                 key: '2',
                 label: 'Traits',
-                children: <Paragraph>{nftObj.description}</Paragraph>,
+                children: (
+                <Space direction='vertical'>
+                    <div>
+                    {(
+                        trait.attributes[0]?
+                        trait.attributes[0].value.map((item, index)=>{
+                            return(
+                                <Tag key={'tag_trait'+index} bordered={false} color={(CONSTANT_POKE.TYPE_COLOR)[item]?(CONSTANT_POKE.TYPE_COLOR)[item]:"blue"}>
+                                {item}
+                                </Tag>
+                            )
+                        })
+                        :(
+                            <Tag bordered={false} color="blue">{" No Valid Type "}</Tag>
+                        ))}</div>
+                    <Descriptions title="">
+                        <Descriptions.Item span="filled"  label="HP">
+                            {(trait.attributes[3]?trait.attributes[3].value:"0")}
+                        </Descriptions.Item>
+                        <Descriptions.Item span="filled"  label="Evoluation Stage">
+                            {(trait.attributes[1]?trait.attributes[1].value:"-")}
+                        </Descriptions.Item>
+                        <Descriptions.Item span="filled" label="Evoluation From">
+                            {(trait.attributes[2]?trait.attributes[2].value:"N/A")}
+                        </Descriptions.Item>
+                    </Descriptions>
+                </Space>
+                  ),
                 style: panelStyleLeft
             },
             {
                 key: '3',
-                label: 'Details',
-                children: <Paragraph>{nftObj.description}</Paragraph>,
+                label: 'Attacks',
+                children: <Row key={'tag_attack_row'} gutter={16} style={{width:"100%"}}>
+                {(
+                    trait.attributes[6]?
+                    trait.attributes[6].value.map((item,index)=>{
+                        return(
+                            <Col key={'tag_attack_col_'+index} span={12}>
+                            <Card key={'tag_attack_'+index} title="" bordered={true}>
+                            <Descriptions title={item.Name}>
+                                <Descriptions.Item span="filled"  label="Points">
+                                    {item.Points}
+                                </Descriptions.Item>
+                                <Descriptions.Item span="filled"  label="Effect">
+                                    {item.Effect}
+                                </Descriptions.Item>
+                            </Descriptions>
+                            </Card>
+                            </Col>
+                        )
+                    })
+                    :(
+                        <Col span={12}><Card bordered={false} title="">-</Card></Col>
+
+                    ))}</Row>,
                 style: panelStyleLeft
             }
         ]
@@ -159,190 +224,139 @@ export default function CardDetailPage(){
         ]
     }
 
-    function buyNow(){
-        openNotification(true, 'success')
-    }
-
-
     return(
         <div style={{marginTop:"5px"}}>
-            <div style={{marginTop:"-20px", height:"20px", backgroundColor:"whitesmoke"}}/>
+            
+        <div style={{marginTop:"-20px", height:"20px", backgroundColor:"whitesmoke"}}/>
         {contextHolder}
-        <Splitter
-            style={{
-            // height: 200,
-                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor:"white"
-            }}
-        >
-            <Splitter.Panel defaultSize="40%" min="20%" max="70%">
-                <Space 
-                    direction="vertical" 
-                    size="small" 
-                    style={{ 
-                        display: 'flex', 
-                        width:"100%",
-                        justifyContent:'center',
-                    }}
-                >
-                    <div className="detail-nftCard-holder">
-                        <Space 
-                            direction="vertical" 
-                            size="small" 
-                            style={{ 
-                                display: 'flex', 
-                                width:"100%",
-                                justifyContent:'center',
-                            }}
-                        >
-                    
-                            <BitcoinCircleColorful style={{padding:"10px",fontSize:"40px"}}/>
-
-                            <NFTImage
-                                className="detail-nftCard"
-                                src={nftObj.image}
-                            />
-                        </Space>
-                    </div>
-                    
-                    <Collapse
-                        size="large"
-                        // bordered={true}
-                        // className="detail-collapse"
-                        defaultActiveKey={['1', '2', '3']}
-                        // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                        style={{
-                            width:"95%",
-                            margin:"0 auto",
-                            backgroundColor:"white"
+        {getACardData.isLoading?(
+            <Skeleton active />
+        ):(
+                <Splitter
+                style={{
+                // height: 200,
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                    backgroundColor:"white"
+                }}
+            >
+                <Splitter.Panel defaultSize="40%" min="20%" max="70%">
+                    <Space 
+                        direction="vertical" 
+                        size="small" 
+                        style={{ 
+                            display: 'flex', 
+                            width:"100%",
+                            justifyContent:'center',
                         }}
-                        ghost
-                        items={getCollapseItemLeft()}
-                    />
-                    <br/>
-                </Space>
-            </Splitter.Panel>
-            <Splitter.Panel>
-                <Space 
-                    direction="vertical" 
-                    size="large" 
-                    style={{ 
-                        display: 'flex', 
-                        width:"95%",
-                        justifyContent:'center',
-                        margin:"10px auto"
-                    }}
-                >
-                    <div>
-                        <Text 
-                            style={{fontSize:"50px", fontWeight:"20px"}}
-                        >
-                            {nftObj.name + " "}
-                        </Text>
-                        <Tag 
-                            bordered={false} 
-                            color="processing"
-                            style={{fontSize:"30px", lineSize:"30px"}}
-                        >
-                            {"#" + nftObj.key}
-                        </Tag>
-                        <br/>
-                        <Text
-                            style={{fontSize:"15px"}}
-                        >
-                            Owned by
-                        </Text>
-                    </div>
-
-                    <ProCard
-                        split='vertical'
-                        bordered
-                        headerBordered
                     >
-                        <ProCard colSpan="60%">
-                            <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Current Best Price"}</Text><br/>
-                            <BitcoinCircleColorful />
-                            <Text 
-                                style={{
-                                    // fontWeight:"500", 
-                                    fontSize:"20px",
-                                    marginLeft:"10px"
-                                    }}
-                            >
-                                {BigInt(nftObj.price).toString()}
-                            </Text>
-                            <Divider/>
-                            <InputNumber
-                                suffix="ETH"
-                                style={{
-                                    width: '70%'
-                                }}
-                            />
-                            <Divider/>
-                            <div 
-                                style={{
+                        <div className="detail-nftCard-holder">
+                            <Space 
+                                direction="vertical" 
+                                size="small" 
+                                style={{ 
+                                    display: 'flex', 
                                     width:"100%",
-                                    textAlign:"center"
+                                    justifyContent:'center',
                                 }}
                             >
-                                <ConfigProvider
-                                    button={{
-                                        className: styles.linearGradientButton,
-                                    }}
-                                >
-                                    <Button 
-                                        type="primary" 
-                                        size="large" 
-                                        icon={<DollarOutlined />}
-                                        style={{margin:"0 auto"}}
-                                        onClick={()=>buyNow()}
-                                    >
-                                        Make An Offer / Buy Now
-                                    </Button>
-
-                                </ConfigProvider>
-                            </div>
-                        </ProCard>
-                        <ProCard className='detail-card-countdown'>
-                            <div 
-                                style={{
-                                    width:"fit-content",
-                                    height:"50%",
-                                    margin:"0 auto",
-                                    marginTop:"50%"
-                                }}
-                            >
-                                <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Time Remain"}</Text><br/>
-                                <Text>{"(Hrs : Mins : Secs)"}</Text>
-                                <Countdown 
-                                    value={deadline} 
-                                    format="HH:mm:ss" 
+                        
+                                <BitcoinCircleColorful style={{padding:"10px",fontSize:"40px"}}/>
+    
+                                <NFTImage
+                                    className="detail-nftCard"
+                                    src={nftObj.tokenImageCID}
+                                    // width={300}
                                 />
-                            </div>
+                            </Space>
+                        </div>
+                        
+                        <Collapse
+                            size="large"
+                            // bordered={true}
+                            // className="detail-collapse"
+                            defaultActiveKey={['1', '2', '3']}
+                            // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                            style={{
+                                width:"95%",
+                                margin:"0 auto",
+                                backgroundColor:"white"
+                            }}
+                            ghost
+                            items={getCollapseItemLeft()}
+                        />
+                        <br/>
+                    </Space>
+                </Splitter.Panel>
+                <Splitter.Panel>
+                    <Space 
+                        direction="vertical" 
+                        size="large" 
+                        style={{ 
+                            display: 'flex', 
+                            width:"95%",
+                            justifyContent:'center',
+                            margin:"10px auto"
+                        }}
+                    >
+                        <div>
+                            <Text 
+                                style={{fontSize:"50px", fontWeight:"20px"}}
+                            >
+                                {trait.name + " "}
+                            </Text>
+                            <Tag 
+                                bordered={false} 
+                                color="processing"
+                                style={{fontSize:"30px", lineSize:"30px"}}
+                            >
+                                {"#" + parseInt(nftObj.tokenId)}
+                            </Tag>
+                            <br/>
+                            <Text
+                                style={{fontSize:"15px"}}
+                            >
+                                {"Owned by "}<NameTag addr={nftObj.owner}/>
+                            </Text>
+                            
+                            <br></br>
+                            <br></br>
+                            <Text
+                                style={{fontSize:"15px", fontWeight:"15px"}}
+                            >
+                                {"Rarity: "}
+                            </Text>
+                            <Rate disabled value={trait.attributes[5]?parseInt(trait.attributes[5].value):0} />
+                            <br></br>
+                            <br></br>
+                            <Text
+                                style={{fontSize:"15px", fontWeight:"15px"}}
+                            >
+                                {"Card Number: " + (trait.attributes[4]?trait.attributes[4].value:"000") + "/250"}
+                            </Text>
+                        </div>
+    
+                        <PricePanel onlyPrice={false} id={parseInt(nftObj.tokenId)}/>
+    
+    
+                        <Collapse
+                            size="large"
+                            bordered={false}
+                            className="detail-collapse"
+                            defaultActiveKey={['1']}
+                            // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                            // style={{
+                            //     background: token.colorBgContainer,
+                            // }}
+                            items={getCollapseItemRight()}
+                        />
+    
+                        <br/>
+    
+                    </Space>
+                </Splitter.Panel>
+                </Splitter>
 
-                        </ProCard>
-
-                    </ProCard>
-
-
-                    <Collapse
-                        size="large"
-                        bordered={false}
-                        className="detail-collapse"
-                        defaultActiveKey={['1']}
-                        // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                        // style={{
-                        //     background: token.colorBgContainer,
-                        // }}
-                        items={getCollapseItemRight()}
-                    />
-
-                    <br/>
-
-                </Space>
-            </Splitter.Panel>
-        </Splitter>
-
+        )}
 
         <Divider/>
         </div>

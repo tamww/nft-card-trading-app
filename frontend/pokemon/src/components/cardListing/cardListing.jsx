@@ -1,15 +1,41 @@
-import "./cardListing.css"
+import {useEffect, useState} from 'react'
 import { 
     ProCard 
 } from '@ant-design/pro-components';
-
-
-import fakeData from '../../testingData/fakeNFT.json'
 import NCard from "../nftCard/nftCard";
 
+import {useReadContract,useAccount  } from 'wagmi'
+import { hardhat } from 'wagmi/chains';
+import ABI_PokemonCard from "../ABI/ABI_PokemonCard.json"
+
+import "./cardListing.css"
+
+import * as CONSTANT_POKE from "../common/CONSTANT.js"
 
 export default function CardListing(){
-    // console.log(fakeData)
+    const { address } = useAccount(); // Ensure address is available
+    // console.log(POKEMONCARD_CONTRACT)
+
+    const { data: _data, isError, isLoading } = useReadContract({
+        address: CONSTANT_POKE.POKEMONCARD_CONTRACT,
+        abi: CONSTANT_POKE.ABI_POKE_CARD,
+        chainId: CONSTANT_POKE.HARDHAT_ID,
+        functionName: "getAllCards", // ✅ Correct function usage
+        enabled: !!address, // ✅ Only fetch if user is connected
+        args:[false]
+    });
+
+    const [data, setData] = useState([]);
+
+    useEffect(()=>{
+        if(_data){
+            console.log(_data)
+            setData(_data)
+        }else{
+            setData([])
+        }
+    },[_data])
+
     return(
         <div 
             style={{
@@ -40,10 +66,10 @@ export default function CardListing(){
                         className="listing-card"
                     
                     >
-                        {fakeData.map((element)=>{
+                        {data.map((element, index)=>{
                             return(
                                 <NCard
-                                    key={'nftCard_'+element.key}
+                                    key={'nftCard_'+index}
                                     item={element}
                                     dark={false}
                                 />

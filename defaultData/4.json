@@ -32,11 +32,14 @@
         "value": [
           {
             "Name": "Frozen Grip",
-            "Points": "50"
+            "Points": "50",
+            "Effect": "❄️ The Defending Pokémon can't retreat during your opponent's next turn."
           },
           {
             "Name": "Haunting Blizzard",
-            "Points": "90"
+            "Points": "90",
+            "Effect": "❄️🌑 Haunting Blizzard (90) – If your opponent's Pokémon is Paralyzed or Asleep, this attack does 40 more damage."
+
           }
         ]
       }

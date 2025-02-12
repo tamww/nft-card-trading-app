@@ -31,12 +31,14 @@
         "trait_type": "Attack",
         "value": [
           {
-            "Name": "Spiral Torrent",
-            "Points": "40"
+            "Name": "💧 Spiral Torrent",
+            "Points": "40",
+            "Effect": "Draw 1 card."
           },
           {
-            "Name": "Hydro Surge",
-            "Points": "80"
+            "Name": "💧⚡ Hydro Surge",
+            "Points": "80",
+            "Effect": "If the opponent's Pokémon is Fire-type, this attack does 40 more damage."
           }
         ]
       }
