@@ -1,0 +1,44 @@
+{
+    "name": "Venomire",
+    "description": "A sleek, snake-like Pokémon with glowing purple eyes and venomous fangs dripping with toxic sludge. Its long, coiling body hovers in the air, surrounded by a haze of purple mist. The background is a dark swamp with eerie glowing mushrooms casting a faint light. The Pokémon card features swirling purple patterns, with Poison and Psychic energy symbols at the corners.",
+    "image": "https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/bafybeih243c34x72v3jxlz56vysp52ujv6yba2uneifcjdpyltany2mk2y",
+    "attributes": [
+      {
+        "trait_type": "Type",
+        "value": ["Poison", "Psychic"]
+      },
+      {
+        "trait_type": "EvoluationStage",
+        "value": "Basic"
+      },
+      {
+        "trait_type": "EvoluationFrom",
+        "value": "None"
+      },
+      {
+        "trait_type": "HP",
+        "value": "100"
+      },
+      {
+        "trait_type": "CardNumber",
+        "value": "107"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "2"
+      },
+      {
+        "trait_type": "Attack",
+        "value": [
+          {
+            "Name": "Toxic Bite",
+            "Points": "40"
+          },
+          {
+            "Name": "Mind Venom",
+            "Points": "70"
+          }
+        ]
+      }
+    ]
+  }

@@ -35,5 +35,7 @@
   },
   "devServer": {
     "historyApiFallback": true
-  }
+  },
+  "strict": false,
+  "noImplicitUseStrict": true
 }

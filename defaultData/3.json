@@ -1,0 +1,44 @@
+{
+    "name": "Thunderoar",
+    "description": "A black panther-like Pokémon with electric sparks crackling along its fur. It crouches in a dense jungle during a storm, with glowing yellow eyes staring fiercely at its prey. Thunderclouds loom in the background, and a flash of lightning illuminates its sleek, muscular body. Its fangs glow with a dark aura as it prepares to strike. The Pokémon card has a sleek Electric/Dark design, with a jagged lightning bolt pattern along the border.",
+    "image": "https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/bafybeifikmiue25spqy4sbvb3fh56xz4eicto5236heyhwrpgfayzfm5dm",
+    "attributes": [
+      {
+        "trait_type": "Type",
+        "value": ["Electric", "Dark"]
+      },
+      {
+        "trait_type": "EvoluationStage",
+        "value": "Basic"
+      },
+      {
+        "trait_type": "EvoluationFrom",
+        "value": "None"
+      },
+      {
+        "trait_type": "HP",
+        "value": "110"
+      },
+      {
+        "trait_type": "CardNumber",
+        "value": "063"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "2"
+      },
+      {
+        "trait_type": "Attack",
+        "value": [
+          {
+            "Name": "Static Claws",
+            "Points": "30"
+          },
+          {
+            "Name": "Thunder Fang",
+            "Points": "70"
+          }
+        ]
+      }
+    ]
+  }

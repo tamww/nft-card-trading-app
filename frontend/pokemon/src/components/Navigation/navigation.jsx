@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import EtherConnector from '../etherConnect/etherConnect';
 import "./navigation.css";
+import EtherConnectorW from '../etherConnect/walletConnect';
 
 
 const { Text } = Typography;
@@ -85,7 +86,8 @@ export default function Navigation (){
                 />
             </Col>
             <Col span={5} className="navigation-col">
-                <EtherConnector enable={false}/>
+                {/* <EtherConnector enable={false}/> */}
+                <EtherConnectorW/>
             </Col>
         </Row>
     )

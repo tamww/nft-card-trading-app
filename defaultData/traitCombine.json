@@ -1,0 +1,1015 @@
+[
+    {
+      "name": "Flarethorn",
+      "description": "A fierce, lion-like Pokémon with a fiery mane intertwined with thorny vines, standing in a volcanic jungle. Its claws glow with ember energy as flames swirl around its paws. The background shows a blazing forest, with embers rising into the smoky sky. The Pokémon's eyes burn with determination, and its tail flickers with green and red flames. The card design is sleek, featuring a Grass and Fire energy symbol at the top, with damage stats and attacks displayed below.",
+      "image": "https://api.pudgypenguins.io/lil/image/9813",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Fire", "Grass"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Emberbud"
+        },
+        {
+          "trait_type": "HP",
+          "value": "140"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "015"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Burning Vines",
+              "Points": "50"
+            },
+            {
+              "Name": "Wildfire Lash",
+              "Points": "90"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Aqualisk",
+      "description": "A sleek, serpentine Pokémon with shimmering blue scales and glowing fin-like spines running along its back. Its long body twists through an underwater coral reef, with bubbles rising around it. Its eyes glow a bright cyan, and water energy swirls around its mouth as it prepares to unleash a powerful attack. The card background features ocean waves, with Water and Dragon-type symbols on the side, and the attack moves displayed in an elegant format.",
+      "image": "https://api.pudgypenguins.io/lil/image/9814",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Water", "Dragon"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "1"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Dropletail"
+        },
+        {
+          "trait_type": "HP",
+          "value": "120"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "042"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Spiral Torrent",
+              "Points": "40"
+            },
+            {
+              "Name": "Hydro Surge",
+              "Points": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Thunderoar",
+      "description": "A black panther-like Pokémon with electric sparks crackling along its fur. It crouches in a dense jungle during a storm, with glowing yellow eyes staring fiercely at its prey. Thunderclouds loom in the background, and a flash of lightning illuminates its sleek, muscular body. Its fangs glow with a dark aura as it prepares to strike. The Pokémon card has a sleek Electric/Dark design, with a jagged lightning bolt pattern along the border.",
+      "image": "https://api.pudgypenguins.io/lil/image/9815",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Electric", "Dark"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "110"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "063"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Static Claws",
+              "Points": "30"
+            },
+            {
+              "Name": "Thunder Fang",
+              "Points": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Frostloom",
+      "description": "A ghostly, ice-covered Pokémon resembling a floating wraith wrapped in a tattered icy cloak. Its glowing blue eyes peer through the mist as frost swirls around its spectral hands. The background features a frozen graveyard under a full moon, with eerie fog creeping across the battlefield. The Pokémon card design includes icy textures and ghostly wisps, with Ice and Ghost energy symbols on the corners.",
+      "image": "https://api.pudgypenguins.io/lil/image/9816",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Ice", "Ghost"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Chillshade"
+        },
+        {
+          "trait_type": "HP",
+          "value": "130"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "088"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Frozen Grip",
+              "Points": "50"
+            },
+            {
+              "Name": "Haunting Blizzard",
+              "Points": "90"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Terradon",
+      "description": "A massive, rock-armored pterosaur Pokémon with jagged stone wings and a glowing gemstone in its forehead. It soars above an ancient canyon as dust storms swirl beneath it. Its wings leave a trail of stone debris as it flaps powerfully. The card features a cracked stone border, with Rock and Flying energy symbols glowing in the background.",
+      "image": "https://api.pudgypenguins.io/lil/image/9817",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Rock", "Flying"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "1"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Stonewing"
+        },
+        {
+          "trait_type": "HP",
+          "value": "150"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "099"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Ancient Crush",
+              "Points": "60"
+            },
+            {
+              "Name": "Skyquake",
+              "Points": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Venomire",
+      "description": "A sleek, snake-like Pokémon with glowing purple eyes and venomous fangs dripping with toxic sludge. Its long, coiling body hovers in the air, surrounded by a haze of purple mist. The background is a dark swamp with eerie glowing mushrooms casting a faint light. The Pokémon card features swirling purple patterns, with Poison and Psychic energy symbols at the corners.",
+      "image": "https://api.pudgypenguins.io/lil/image/9818",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Poison", "Psychic"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "100"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "107"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Toxic Bite",
+              "Points": "40"
+            },
+            {
+              "Name": "Mind Venom",
+              "Points": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mechavolt",
+      "description": "A towering robotic Pokémon with glowing blue circuits and rotating gears embedded in its metallic arms. Sparks of electricity surge between its fingers as it prepares to fire a powerful energy beam. The background is a futuristic industrial facility, with glowing steel platforms and cables crackling with energy. The card design features sharp metallic edges and bright blue highlights, with Steel and Electric energy symbols prominent.",
+      "image": "https://api.pudgypenguins.io/lil/image/9819",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Steel", "Electric"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Gearstrike"
+        },
+        {
+          "trait_type": "HP",
+          "value": "160"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "112"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "4"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Charge Cannon",
+              "Points": "70"
+            },
+            {
+              "Name": "Overload Beam",
+              "Points": "120"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Barklash",
+      "description": "A sleek, wolf-like Pokémon covered in dark green fur with razor-sharp thorny vines growing along its back. It crouches low in a misty forest, eyes glowing bright yellow as it prepares to lunge. The background is dense with tangled roots and shadows creeping through the trees. The card design features swirling vine patterns with a dark green and black color scheme.",
+      "image": "https://api.pudgypenguins.io/lil/image/9820",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Grass", "Dark"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "1"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Thorncub"
+        },
+        {
+          "trait_type": "HP",
+          "value": "130"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "082"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Briar Claw",
+              "Points": "50"
+            },
+            {
+              "Name": "Shadow Pounce",
+              "Points": "90"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cryosaur",
+      "description": "A massive dinosaur-like Pokémon covered in ice crystals, with jagged icicles forming along its spine. Its sharp fangs glisten with frost as mist billows from its mouth. It stands atop a frozen tundra, icy winds howling around it. The card design features sharp, frosty patterns with Ice and Dragon-type symbols glowing in the corners.",
+      "image": "https://api.pudgypenguins.io/lil/image/9821",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Ice", "Dragon"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Frostic"
+        },
+        {
+          "trait_type": "HP",
+          "value": "150"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "087"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Glacial Roar",
+              "Points": "70"
+            },
+            {
+              "Name": "Permafrost Fang",
+              "Points": "120"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Quillstrike",
+      "description": "A porcupine-like Pokémon with dark green fur and long, glowing purple quills dripping with venom. It stands on a mossy rock in a jungle, its spikes bristling as it prepares to strike. The Pokémon card design features a toxic green and purple mist effect with Poison and Normal energy symbols.",
+      "image": "https://api.pudgypenguins.io/lil/image/9822",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Poison", "Normal"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "110"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "116"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Venom Spines",
+              "Points": "40"
+            },
+            {
+              "Name": "Needle Barrage",
+              "Points": "90"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Aquatide",
+      "description": "A massive, walrus-like Pokémon with glacial blue tusks and a thick icy mane. It emerges from freezing waters, surrounded by crashing icebergs as snow falls from the sky. Its breath releases a mist of frost, and its eyes glow a deep icy blue. The Pokémon card background features an arctic tundra theme with Water and Ice energy symbols prominently displayed.",
+      "image": "https://api.pudgypenguins.io/lil/image/9823",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Water", "Ice"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Frostflow"
+        },
+        {
+          "trait_type": "HP",
+          "value": "140"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "118"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Glacier Charge",
+              "Points": "60"
+            },
+            {
+              "Name": "Arctic Crash",
+              "Points": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dreadvine",
+      "description": "A monstrous, plant-like Pokémon with twisted thorny vines and glowing red eyes, lurking in a misty, haunted forest. The vines coil menacingly, pulsing with dark energy, while poisonous spores drift from its massive flower-like body. Its eerie silhouette stands against a glowing full moon, casting long, creeping shadows. The Pokémon card design features a dark green and black color scheme, with thorny patterns bordering the attack stats and energy symbols.",
+      "image": "https://api.pudgypenguins.io/lil/image/9824",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Grass", "Dark"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "2"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "Thornfiend"
+        },
+        {
+          "trait_type": "HP",
+          "value": "150"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "120"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Entangle Roots",
+              "Points": "40"
+            },
+            {
+              "Name": "Shadow Spore",
+              "Points": "90"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sproutail",
+      "description": "A small, squirrel-like Pokémon with a tiny plant sprout growing from the tip of its fluffy tail. Its bright green eyes sparkle with energy as it scampers through a sunny forest, playfully tossing acorns. The Pokémon card background features warm sunlight filtering through thick jungle leaves, with Grass energy symbols elegantly woven into the foliage.",
+      "image": "https://api.pudgypenguins.io/lil/image/9825",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Grass"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "70"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "127"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Vine Play",
+              "Points": "20"
+            },
+            {
+              "Name": "Leaf Pounce",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pufflume",
+      "description": "A chubby, seal-like Pokémon with a cloud-like puff on its head, resembling a soft water droplet. It has tiny flippers and big, glossy eyes that reflect the ocean waves. It gently bobs on the water’s surface, leaving tiny, shimmering bubbles in its wake. The Pokémon card background is a tranquil ocean under a golden sunset, with Water energy symbols appearing like ripples.",
+      "image": "https://api.pudgypenguins.io/lil/image/9826",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Water"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "80"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "128"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Bubble Drift",
+              "Points": "30"
+            },
+            {
+              "Name": "Aqua Float",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chirpette",
+      "description": "A tiny, round bird Pokémon with soft pastel feathers in shades of baby blue and peach. It has sparkling, music note-shaped wing tips and hums a cheerful melody as it flutters through the sky. The Pokémon card background features a bright blue sky with fluffy white clouds shaped like musical notes, with Flying and Normal energy symbols embedded in the breeze.",
+      "image": "https://api.pudgypenguins.io/lil/image/9827",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Flying", "Normal"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "70"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "129"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Feather Dance",
+              "Points": "20"
+            },
+            {
+              "Name": "Sky Serenade",
+              "Points": "40"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bunnectar",
+      "description": "A tiny, bunny-like Pokémon with butterfly wings coated in golden pollen. It has big, round eyes and two fuzzy antennae that twitch as it hovers over a blooming flower. The Pokémon card background features a vibrant garden filled with oversized blossoms, with soft golden sparkles in the air, and Bug and Fairy energy symbols hidden among the petals.",
+      "image": "https://api.pudgypenguins.io/lil/image/9828",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Bug", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "75"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "130"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Sweet Scent",
+              "Points": "30"
+            },
+            {
+              "Name": "Honey Rush",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Snibbi",
+      "description": "A small, chubby snow fox with sparkling ice-blue fur and fluffy white paws. Its big round eyes shimmer like frost, and tiny snowflakes swirl around it as it playfully tumbles in soft snow. The background features a peaceful snowy landscape with glimmering ice crystals reflecting sunlight.",
+      "image": "https://api.pudgypenguins.io/lil/image/9829",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Ice", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "75"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "131"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Frosty Hug",
+              "Points": "30"
+            },
+            {
+              "Name": "Glitter Snow",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chirpuff",
+      "description": "A fluffy, round bird Pokémon with pastel-colored feathers and tiny sparkling wings. It hums a melodic tune while gliding through a bright sky filled with floating petals. The Pokémon card background features a golden sunrise with musical notes forming in the air.",
+      "image": "https://api.pudgypenguins.io/lil/image/9830",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Flying", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "80"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "134"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Twinkle Peck",
+              "Points": "20"
+            },
+            {
+              "Name": "Sky Serenade",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pufflilly",
+      "description": "Design a Pokémon card featuring a small, round Pokémon resembling a blooming lily with soft green leaves forming a fluffy mane. It has big, sparkling eyes and a tiny pink nose. The card background should be a twilight meadow with glowing flowers. The card frame should have a green and pink gradient to represent its Grass/Fairy typing. The attack names and energy costs should be clearly visible, with small leaf and sparkle icons next to them.",
+      "image": "https://api.pudgypenguins.io/lil/image/9831",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Grass", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "70"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "201"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Leaf Snuggle",
+              "Points": "20"
+            },
+            {
+              "Name": "Lush Glow",
+              "Points": "40"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bubbloon",
+      "description": "Create a Pokémon card featuring a small, balloon-like Pokémon with a translucent blue body and tiny flippers. It has round, cheerful eyes and floats in the sky on bubble-shaped clouds. The card background should have soft blue and pink clouds with a glowing effect. The card frame should be light blue and pastel pink to match its Water/Fairy typing. The attacks and ability should be displayed with small water droplet and sparkle icons.",
+      "image": "https://api.pudgypenguins.io/lil/image/9832",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Water", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "65"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "202"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Bubble Bounce",
+              "Points": "30"
+            },
+            {
+              "Name": "Aqua Drift",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Snuzzkit",
+      "description": "Design a Pokémon card featuring a chubby kitten Pokémon with soft, plush-like fur and tiny round paws. Its curled tail has a heart-shaped tip, and it wears a cozy scarf. The card background should be a warm, pastel-colored room with fluffy pillows. The card frame should have soft pink and white hues to fit its Normal/Fairy typing. The attack names and energy symbols should be clear, with small heart and sparkle icons.",
+      "image": "https://api.pudgypenguins.io/lil/image/9833",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Normal", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "75"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "203"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "2"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Teddy Tackle",
+              "Points": "30"
+            },
+            {
+              "Name": "Cozy Nuzzle",
+              "Points": "40"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Flitterfawn",
+      "description": "Create a Pokémon card featuring a small, deer-like Pokémon with tiny leafy antlers and soft golden fur. Its eyes sparkle like dewdrops, and pink flowers bloom as it prances through a sunlit glade. The background should be a bright forest filled with glowing fireflies. The card frame should be a blend of green and gold to reflect its Grass/Fairy typing. Attack names and energy icons should be well-placed, with leaf and sparkle icons next to them.",
+      "image": "https://api.pudgypenguins.io/lil/image/9834",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Grass", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "70"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "204"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Pixie Dash",
+              "Points": "20"
+            },
+            {
+              "Name": "Sunbeam Hug",
+              "Points": "40"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wispbibi",
+      "description": "Design a Pokémon card featuring a tiny, ghostly Pokémon with a soft wisp-like body and glowing purple eyes. It has a mischievous but adorable expression as it floats through a magical forest filled with floating lanterns and misty blue lights. The card background should have a soft purple and blue glow. The card frame should be a mix of dark purple and soft pink to reflect its Ghost/Fairy typing. Attack names and energy symbols should be clearly visible, with small ghostly and sparkle icons.",
+      "image": "https://api.pudgypenguins.io/lil/image/9835",
+      "attributes": [
+        {
+          "trait_type": "Type",
+          "value": ["Ghost", "Fairy"]
+        },
+        {
+          "trait_type": "EvoluationStage",
+          "value": "Basic"
+        },
+        {
+          "trait_type": "EvoluationFrom",
+          "value": "None"
+        },
+        {
+          "trait_type": "HP",
+          "value": "75"
+        },
+        {
+          "trait_type": "CardNumber",
+          "value": "205"
+        },
+        {
+          "trait_type": "Rarity",
+          "value": "3"
+        },
+        {
+          "trait_type": "Attack",
+          "value": [
+            {
+              "Name": "Spirit Giggle",
+              "Points": "30"
+            },
+            {
+              "Name": "Moonlit Whirl",
+              "Points": "50"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  
