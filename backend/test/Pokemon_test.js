@@ -11,7 +11,7 @@ describe("PokemonCard & PokemonMarketplace 测试用例", function () {
   });
 
   describe("1. 合约部署", function () {
-    it("1.1 部署 PokemonCard", async function () {
+    it("PokemonCard", async function () {
       PokemonCard = await ethers.getContractFactory("PokemonCard");
       pokemonCard = await PokemonCard.deploy("https://mybaseuri.com/");
       await pokemonCard.deployed();
