@@ -1,6 +1,6 @@
 const { ethers } = require("hardhat");
 
-describe("PokemonCard & PokemonMarketplace 测试用例", function () {
+describe("PokemonCard & PokemonMarketplace Test Case", function () {
   let owner, admin, user1, user2;
   let PokemonCard, PokemonMarketplace;
   let pokemonCard, pokemonMarketplace;
@@ -10,8 +10,8 @@ describe("PokemonCard & PokemonMarketplace 测试用例", function () {
     [owner, admin, user1, user2, ...addrs] = await ethers.getSigners();
   });
 
-  describe("1. 合约部署", function () {
-    it("PokemonCard", async function () {
+  describe("Deployment", function () {
+    it("Should deploy PokemonCard", async function () {
       PokemonCard = await ethers.getContractFactory("PokemonCard");
       pokemonCard = await PokemonCard.deploy("https://mybaseuri.com/");
       await pokemonCard.deployed();
