@@ -17,7 +17,7 @@ module.exports = {
       gasPrice:"auto",
       gasMultiplier:3,
       // hardfork:"shanghai",
-      loggingEnabled:true
+      // loggingEnabled:true
     }
   },
 };

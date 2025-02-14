@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PokemonCard.sol";
 // import "hardhat/console.sol";
+
 contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     
@@ -285,7 +286,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     //******************************************************//
 
     function isTradeOngoing(uint256 tokenId) public view returns(bool){
-        return (listings[tokenId].isActive && block.timestamp < listings[tokenId].endTime && block.timestamp >= listings[tokenId].startTime);
+        return (listings[tokenId].isActive && block.timestamp >= listings[tokenId].startTime);
     }
 
     function _startTradeCheck(uint256 tokenId) internal view{
