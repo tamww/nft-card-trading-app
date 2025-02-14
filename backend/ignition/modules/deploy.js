@@ -42,7 +42,7 @@ async function main() {
     await pokeAuctionFactory.listItem(4,1,100,1,24);
 
     // create price history for token 1
-    const tx = await .connect(account3).executePurchase(3, { 
+    const tx = await pokeAuctionFactory.connect(account3).executePurchase(3, { 
         value: ethers.parseEther("20")
       });
     await tx.wait();
