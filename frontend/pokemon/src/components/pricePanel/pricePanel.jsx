@@ -11,7 +11,7 @@ import {
     Collapse, theme, Typography,
     Statistic, Card, Tag,
     InputNumber, Rate, Button,
-    ConfigProvider, notification, Skeleton, 
+    ConfigProvider, notification, Modal, 
     Descriptions, Row, Col
 } from 'antd';
 
@@ -23,9 +23,9 @@ import {useReadContract,useReadContracts,useAccount,useEnsName   } from 'wagmi'
 
 import * as CONSTANT_POKE from "../common/CONSTANT.js"
 import CurrentPrice from './currePrice.jsx';
+import PaymentPanel from '../paymentPanel/paymentPanel.jsx';
 
 const { Countdown } = Statistic;
-const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 211 + 1000 * 30; // Dayjs is also OK
 
 const useStyle = createStyles(({ prefixCls, css }) => ({
     linearGradientButton: css`
@@ -54,11 +54,15 @@ const useStyle = createStyles(({ prefixCls, css }) => ({
 const { Paragraph, Title, Text } = Typography;
 
 export default function PricePanel(prop){
-    let {onlyPrice, id} = prop
+    let {onlyPrice, id, updateInputUserPrice, modalControl} = prop
     const { styles } = useStyle();
 
     const { address } = useAccount(); // Ensure address is available
     const [api, contextHolder] = notification.useNotification();
+    const [userPrice, setUserPrice] = useState(0);
+    const [curPrice, setCurPrice] = useState(0)
+    const [idd, setIdd] = useState(id)
+    const [deal, setDeal] = useState(CONSTANT_POKE.POKEAUCTION_BASE_OBJ)
 
     // const getADeal = useReadContracts({      
     //     contracts:[
@@ -86,112 +90,121 @@ export default function PricePanel(prop){
             abi: CONSTANT_POKE.ABI_POKE_MARKET,
             chainId: CONSTANT_POKE.HARDHAT_ID,
             functionName: "getATrade", 
-            enabled: !!address, 
+            // enabled: !!address, 
             args:[id],
+            watch:true,
             onError(error) {
                 console.log('Error', error)
             },
         }
     );
 
-    const getPrice = useReadContract(
-            {
-                address: CONSTANT_POKE.POKEMONAUCTION_CONTRACT,
-                abi: CONSTANT_POKE.ABI_POKE_MARKET,
-                chainId: CONSTANT_POKE.HARDHAT_ID,
-                functionName: "calculatePrice", 
-                enabled: !!address, 
-                args:[id],
-                watch:true,
-                structuralSharing: (prev, next) => (prev === next ? prev : next),
-                onError(error) {
-                    console.log('Error', error)
-                },
-            }
-    );
-
-    
-    const [deal, setDeal] = useState(CONSTANT_POKE.POKEAUCTION_BASE_OBJ)
+    // const getPrice = useReadContract(
+    //         {
+    //             address: CONSTANT_POKE.POKEMONAUCTION_CONTRACT,
+    //             abi: CONSTANT_POKE.ABI_POKE_MARKET,
+    //             chainId: CONSTANT_POKE.HARDHAT_ID,
+    //             functionName: "calculatePrice", 
+    //             enabled: !!address, 
+    //             args:[id],
+    //             watch:true,
+    //             structuralSharing: (prev, next) => (prev === next ? prev : next),
+    //             onError(error) {
+    //                 console.log('Error', error)
+    //             },
+    //         }
+    // );
 
     useEffect(()=>{
         if(getADeal.data){
             // setPrice(parseInt(getADeal.data.startPrice) / 1000000000000000000)
             setDeal(getADeal.data)
         }
-    },[getADeal.data, getPrice])
+        
+    },[getADeal.data])
 
-    // useEffect(()=>{
-    //     setPrice(parseInt(getPrice.data) / CONSTANT_POKE.ONE_ETHER )
-    // },[getPrice.data])
-
-    function openNotification(pauseOnHover, type){
-        api[type]({
-          message: 'Notification Title',
-          description:
-            'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-          showProgress: true,
-          pauseOnHover,
-        });
-      };
+    useEffect(()=>{
+        setIdd(id)
+    },[id])
 
     function buyNow(){
-        openNotification(true, 'success')
+        modalControl(true)
+        // openNotification(true, 'success')
     }
 
-    function createADeal(){
+    function updateCurPrice(price){
+        setCurPrice(price)
+    }
 
+    function userPriceUpdate(price){
+        setUserPrice(price)
+        updateInputUserPrice(price)
     }
 
     return(
-        <ProCard
+    <>
+    <ProCard
         split='vertical'
         bordered
         headerBordered
     >
+        
         <ProCard colSpan="60%">
-            <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Current Price (ETH) - update every 10 seconds"}</Text><br/>
-            <BitcoinCircleColorful />
-            <CurrentPrice deal={deal}/>
-            {/* <Text 
-                style={{
-                    // fontWeight:"500", 
-                    fontSize:"20px",
-                    marginLeft:"10px"
-                    }}
-            >
-                {price.toFixed(5)}
-            </Text> */}
-            <Divider/>
-            <InputNumber
-                suffix="ETH"
-                style={{
-                    width: '70%'
-                }}
-            />
-            <Divider/>
-            <div 
-                style={{
-                    width:"100%",
-                    textAlign:"center"
-                }}
-            >
-                <ConfigProvider
-                    button={{
-                        className: styles.linearGradientButton,
-                    }}
-                >
-                    <Button 
-                        type="primary" 
-                        size="large" 
-                        icon={<DollarOutlined />}
-                        style={{margin:"0 auto"}}
-                        onClick={()=>buyNow()}
-                    >
-                        Make An Offer / Buy Now
-                    </Button>
+            {deal.isActive&&(deal.saleType==1||deal.saleType==2)?
+            <>
+                <Text style={{fontWeight:"500", fontSize:"20px"}}>{"Current Price (ETH)"}</Text><br/>
+                <Text>**Update every 15 seconds</Text><br/>
+                <BitcoinCircleColorful />
+                <CurrentPrice deal={deal} curPrice={updateCurPrice}/>
+                <Divider/>
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <InputNumber
+                            suffix="ETH"
+                            style={{
+                                width: '90%'
+                            }}
+                            value={userPrice}
+                            onChange={item=>{userPriceUpdate(item)}}
+                            disabled={address==deal.seller}
+                        />
+                    </Col>
 
-                </ConfigProvider>
+                    <Col span={12} style={{width:"100%"}}>
+                        <ConfigProvider
+                            button={{
+                                className: styles.linearGradientButton,
+                            }}
+                        >
+                            <Button 
+                                type="primary" 
+                                size="large" 
+                                icon={<DollarOutlined />}
+                                style={{
+                                    margin:"0 auto",
+                                    left:"20%"
+                                }}
+                                disabled={userPrice<=0 || userPrice < curPrice || address==deal.seller}
+                                onClick={()=>buyNow()}
+                            >
+                                Buy Now
+                            </Button>
+                        </ConfigProvider>
+                    </Col>
+                </Row>
+            </>
+            :<div style={{fontWeight:"500", fontSize:"20px"}}>
+                <div style={{ marginLeft:"20%", marginTop:"20%"}}>
+                    <Text style={{fontWeight:"500", fontSize:"20px"}}>
+                        {"Currently Not on Sales"}
+                    </Text>
+                </div>
             </div>
+            }
+
+
+            {/* <Divider/> */}
+ 
         </ProCard>
         <ProCard className='detail-card-countdown'>
             <div 
@@ -226,7 +239,7 @@ export default function PricePanel(prop){
             </div>
 
         </ProCard>
-
     </ProCard>
+    </>
     )
 }

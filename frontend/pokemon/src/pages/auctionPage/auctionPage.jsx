@@ -10,7 +10,7 @@ export default function AuctionPage(){
           // overFlow:"hidden", 
           width:"100%"
           }}>
-        <CardListing/>
+        <CardListing userCard={false} auction={true} trade={false}/>
       </div>
     )
 }

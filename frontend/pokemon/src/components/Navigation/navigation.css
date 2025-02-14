@@ -3,7 +3,8 @@
     height:50px;
     /* background-color:red; */
     /* background: transparent; */
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(235, 236, 248, 0.533);
+    /* background-color: rgba(137, 136, 139, 0.533); */
     backdrop-filter: blur(10px);
     /* // position:"relative"
     // textAlign: "center"
@@ -20,7 +21,7 @@
     font-size: 30px;
     font-weight: 800;
     color:white;
-    text-shadow: 2px 2px 4px #000000;
+    text-shadow: 3px 3px 8px #000000;
 }
 
 .navigation-menu{

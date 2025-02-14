@@ -11,17 +11,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.2.6",
     "@ant-design/pro-components": "^2.8.4",
     "@ant-design/web3": "^1.20.0",
     "@ant-design/web3-ethers": "^1.1.15",
+    "@tanstack/react-query": "^5.66.0",
+    "@wagmi/core": "^2.16.4",
     "antd": "^5.23.3",
     "antd-style": "^3.7.1",
     "axios": "^1.7.9",
     "ethers": "^6.13.5",
+    "pinata-web3": "^0.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-fast-marquee": "^1.6.5",
     "react-router-dom": "^7.1.5",
-    "universal-cookie": "^7.2.2"
+    "universal-cookie": "^7.2.2",
+    "viem": "^2.23.2",
+    "wagmi": "^2.14.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

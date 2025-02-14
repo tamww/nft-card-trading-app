@@ -12,6 +12,11 @@ export default function NameTag(prop){
         chainId: HARDHAT_ID,
     })
     return (
-        <a>{userName.data?userName.data:addr}</a>
+        <>
+        {address==addr?<a>ME</a>:(
+            <a>{userName.data?userName.data:addr}</a>
+        )}
+        </>
+        
     )
 }
