@@ -56,7 +56,7 @@ async function main() {
     // const tx4 = await pokeAuctionFactory.connect(account4).listItem(2,2,20,20,5);
     // await tx4.wait();
 
-    // const tx2 = await pokeAuctionFactory.connect(account3).listItem(3,2,20,20,5);
+    // const tx2pokeAuctionFactory = await pokeAuctionFactory.connect(account3).listItem(3,2,20,20,5);
     // await tx2.wait();
 
     // const tx5 = await pokeAuctionFactory.connect(account3).executePurchase(2, { 

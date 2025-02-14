@@ -38,7 +38,7 @@ export default function TradeEventAll({incomeId}) {
             eventName: 'Listings', 
             fromBlock:0n
         })
-        console.log(logs)
+        // console.log(logs)
 
         var objList = logs.map(item=>{
             var obj = {}
@@ -51,8 +51,8 @@ export default function TradeEventAll({incomeId}) {
         if(incomeId!=undefined){
           objList = objList.filter(item=>item.tokenId==incomeId)
         }
-        console.log(objList)
-        console.log(logs)
+        // console.log(objList)
+        // console.log(logs)
         setData(objList)
       }
   

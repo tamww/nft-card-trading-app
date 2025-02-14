@@ -65,9 +65,9 @@ export default function TradeHistory({incomeId}) {
         if(incomeId!=undefined){
           objList = objList.filter(item=>item.tokenId==incomeId)
         }
-        console.log(objList)
+        // console.log(objList)
         priceData.sort((a, b) => a.time - b.time);
-        console.log(logs)
+        // console.log(logs)
         setData(objList)
         setDataGraph(priceData)
       }

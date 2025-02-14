@@ -8,14 +8,13 @@ module.exports = {
     hardhat: {
       mining: {
         auto: true,
-        interval: [10000, 15000],
+        interval: 5000,
         mempool: {
-          order: "priority"
+          order: "fifo"
         }
       },
-      // fork:"merge"
-      gasPrice:"auto",
-      gasMultiplier:3,
+      // chainId: 1339,
+      fork:"merge",
       // hardfork:"shanghai",
       loggingEnabled:true
     }

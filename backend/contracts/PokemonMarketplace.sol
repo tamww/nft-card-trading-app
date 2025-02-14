@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PokemonCard.sol";
 // import "hardhat/console.sol";
+
 contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     
@@ -121,14 +122,14 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         uint256 initialPrice,
         uint256 endPrice,
         uint256 duration
-    ) external whenNotPaused nonReentrant returns (Listing memory) {
+    ) external whenNotPaused returns (Listing memory) {
         _startTradeCheck(tokenId);
-
+        // console.log(metadataContract.ownerOf(tokenId) == msg.sender);
         require(metadataContract.ownerOf(tokenId) == msg.sender, "Not owner");
         require(initialPrice > 0 && endPrice >= 0, "Invalid price");
         require(duration > 0, "Invalid duration");
         SaleType saleType = SaleType(cardType);
-
+        // console.log(saleType);
         // DutchAuctionConfig memory config;
         if (saleType == SaleType.DutchAuction) {
             // for dutch auction
@@ -139,31 +140,35 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         }else{
             revert("Wrong sale type selected");
         }
+        uint256 startTime = block.timestamp;
+        uint256 endTime = block.timestamp + (duration * ONE_HOUR);
+        uint256 inPrice = initialPrice * ONE_ETHER;
+        uint256 enPrice = endPrice * ONE_ETHER;
+        metadataContract.setSalesStatus(
+            msg.sender,
+            tokenId, 
+            true, 
+            cardType,
+            startTime,
+            endTime,
+            duration,
+            inPrice,
+            enPrice
+        );
         Listing memory _list = Listing(
-            address(_msgSender()),
+            msg.sender,
             saleType,
             tokenId,
-            block.timestamp,
-            block.timestamp + (duration * ONE_HOUR),
+            startTime,
+            endTime,
             duration,
-            initialPrice * ONE_ETHER,
-            endPrice * ONE_ETHER,
+            inPrice,
+            enPrice,
             true
         );
         listings[tokenId] = _list;
-        metadataContract.setSalesStatus(
-            address(_msgSender()),
-            tokenId, 
-            true, 
-            uint256(saleType),
-            block.timestamp,
-            block.timestamp + (duration * ONE_HOUR),
-            duration,
-            initialPrice * ONE_ETHER,
-            endPrice * ONE_ETHER
-        );
+
         // console.log("here");
-        metadataContract.changeOwnership(msg.sender, address(this), tokenId);
         // console.log("here2");
         // emit Listed(tokenId, saleType);
         emit TradeStarted(
@@ -177,6 +182,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
             true,
             saleType
         );
+        metadataContract.changeOwnership(_msgSender(), address(this), tokenId);
 
         return _list;
     }
@@ -285,7 +291,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     //******************************************************//
 
     function isTradeOngoing(uint256 tokenId) public view returns(bool){
-        return (listings[tokenId].isActive && block.timestamp < listings[tokenId].endTime && block.timestamp >= listings[tokenId].startTime);
+        return (listings[tokenId].isActive && block.timestamp >= listings[tokenId].startTime);
     }
 
     function _startTradeCheck(uint256 tokenId) internal view{

@@ -72,7 +72,7 @@ const contractInfo = [
 
 const { Content, Footer } = Layout;
 
-console.log(hardhat.id)
+// console.log(hardhat.id)
 
 function App() {
   // const [count, setCount] = useState(0)

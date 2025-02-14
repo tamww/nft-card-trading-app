@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./ERC721URIStorage.sol";
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -202,7 +202,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     }
 
     function verifyToken(uint256 _tokenID, address callerAddr)external view returns(bool){
-        return (callerAddr == ownerOf(_tokenID) &&callerAddr == pokemonMetadata[_tokenID].owner && !burnedCoin[_tokenID]);
+        return (callerAddr == pokemonMetadata[_tokenID].owner && !burnedCoin[_tokenID]);
     }
 
     //******************************************************//

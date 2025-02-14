@@ -62,8 +62,8 @@ export default function CreatePage(){
     const [current, setCurrent] = useState(0)
     async function createNFT(e){
         // e.preventDefault()
-        console.log(imageCID)
-        console.log(traitCID)
+        // console.log(imageCID)
+        // console.log(traitCID)
         if(e==2 && imageCID!=null && traitCID != null){
             setLoading(true)
             writeContract({
@@ -88,7 +88,7 @@ export default function CreatePage(){
 
     const fileInputRef = useRef(null);
     const changeHandler = (event) => {
-        console.log(event)
+        // console.log(event)
         setSelectedFile(event.fileList?.[0].originFileObj);
     };
     
@@ -128,12 +128,12 @@ export default function CreatePage(){
         if(item != null){
             const upload2 = await pinata.pinJSONToIPFS(item)
             setTraitCID(upload2.IpfsHash)
-            console.log(upload2)
+            // console.log(upload2)
             openNotification(true, "", "Upload Success at " + upload2.Timestamp)
         }else{
             const upload = await pinata.upload.file(selectedFile)
             setImageCID(upload.IpfsHash)
-            console.log(upload)
+            // console.log(upload)
             openNotification(true, "", "Upload Success at " + upload.Timestamp)
         }
       } catch (error) {

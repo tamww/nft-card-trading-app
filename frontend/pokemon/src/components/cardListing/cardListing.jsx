@@ -84,7 +84,7 @@ export default function CardListing({userCard, auction, trade}){
         } else {
             setData([]);
         }
-        console.log(_data)
+        // console.log(_data)
     }, [_data]);
 
     // Update filters when form values change, reset to page 1
