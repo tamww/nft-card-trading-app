@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PokemonCard.sol";
-// import "hardhat/console.sol";
+
 contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     
@@ -73,7 +73,6 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     uint256 public constant ONE_HOUR = 1 hours;
     bool public paused = false;
     PokemonCard public metadataContract;
-    address public immutable predefinedOwner;
 
     //******************************************************//
     //                      Mapping                         //
@@ -81,6 +80,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     // storage
     mapping(uint256 => Listing) public listings;
     mapping(address => uint256) public pendingWithdraw;
+
     //******************************************************//
     //                      Modifier                        //
     //******************************************************//
@@ -93,16 +93,11 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     //                      constructor                     //
     //******************************************************//
     // constructor
-    constructor(address _nftAddress, address _predefinedOwner) Ownable(_predefinedOwner) {
+    constructor(address _nftAddress) Ownable(msg.sender) {
         metadataContract = PokemonCard(_nftAddress);
-        predefinedOwner = _predefinedOwner;
-        require(_predefinedOwner != address(0), "Invalid owner address");
-        
-        // Verify ownership initialization
-        require(owner() == _predefinedOwner, "Ownership setup failed");
         // initial role
-        _grantRole(DEFAULT_ADMIN_ROLE, _predefinedOwner); // default admin role
-        _grantRole(ADMIN_ROLE, _predefinedOwner);         // set custom ADMIN_ROLE
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender); // default admin role
+        _grantRole(ADMIN_ROLE, msg.sender);         // set custom ADMIN_ROLE
     }
 
 
@@ -121,7 +116,7 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         uint256 initialPrice,
         uint256 endPrice,
         uint256 duration
-    ) external whenNotPaused nonReentrant returns (Listing memory) {
+    ) external whenNotPaused returns (Listing memory) {
         _startTradeCheck(tokenId);
 
         require(metadataContract.ownerOf(tokenId) == msg.sender, "Not owner");
@@ -150,9 +145,9 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
             endPrice * ONE_ETHER,
             true
         );
+
         listings[tokenId] = _list;
         metadataContract.setSalesStatus(
-            address(_msgSender()),
             tokenId, 
             true, 
             uint256(saleType),
@@ -162,9 +157,8 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
             initialPrice * ONE_ETHER,
             endPrice * ONE_ETHER
         );
-        // console.log("here");
-        metadataContract.changeOwnership(msg.sender, address(this), tokenId);
-        // console.log("here2");
+
+        // nftContract.transferFrom(msg.sender, address(this), tokenId);
         // emit Listed(tokenId, saleType);
         emit TradeStarted(
             tokenId,
@@ -208,16 +202,10 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         return (curPrice > _dutch.endPrice)? curPrice : _dutch.endPrice;
     }
 
-    function cancelListing(uint256 tokenId) public whenNotPaused{
-        require(listings[tokenId].seller == msg.sender, "Not seller");
-        require(block.timestamp < listings[tokenId].endTime, "Auction ended");
-        require(listings[tokenId].saleType ==SaleType.DutchAuction || listings[tokenId].saleType==SaleType.FixedPrice, "Only running trade can be canceled.");
-        metadataContract.changeOwnership(address(this), msg.sender, tokenId);
-        metadataContract.setSalesStatus(address(_msgSender()), tokenId, false, uint256(SaleType.Minted), 0,0,0,0,0);
-        // _cancelTrade(tokenId);
+    function cancelDutchAuction(uint256 tokenId) public whenNotPaused{
+        _cancelTrade(tokenId);
         listings[tokenId].isActive = false;
         emit TradeCancel(tokenId, _msgSender(), block.timestamp, listings[tokenId].saleType);
-        delete listings[tokenId];
     }
 
     //******************************************************//
@@ -231,12 +219,12 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         require(!metadataContract.checkBurned(tokenId), "buy nft: NFT has been burned");
         require(_listing.isActive, "buy nft: not on sales.");
         require(block.timestamp <= _listing.endTime, "buy nft: out of sales period");
+
         uint256 requiredPrice = calculatePrice(tokenId);
 
         require(msg.value >= requiredPrice, "buy nft: insufficient funds.");
 
         metadataContract.setSalesStatus(
-            address(_msgSender()),
             tokenId, 
             false, 
             uint256(SaleType.Minted),
@@ -245,15 +233,14 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
 
         listings[tokenId].isActive = false;
 
-        metadataContract.changeOwnership(address(this), _msgSender(), tokenId);
+        metadataContract.changeOwnership(_listing.seller, _msgSender(), tokenId);
         _setWithdraw(requiredPrice, _listing.seller);
 
         if(msg.value - requiredPrice > 0){
             _setWithdraw(msg.value - requiredPrice, _msgSender());
         }
-        
+
         emit TokenSold(tokenId, _listing.seller, _msgSender(), requiredPrice, block.timestamp, _listing.saleType);
-        delete listings[tokenId];
     }
 
     //******************************************************//
@@ -267,25 +254,17 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
         emit EmergencyPaused(msg.sender);
     }
 
-    function emergencyWithdraw(uint256 tokenId) external onlyRole(ADMIN_ROLE) {
-        require(listings[tokenId].isActive, "Listing not active");
-        metadataContract.changeOwnership(address(this), owner(), tokenId);
-        metadataContract.setSalesStatus(
-            address(_msgSender()),
-            tokenId, 
-            false, 
-            uint256(SaleType.Minted),
-            0,0,0,0,0
-        );
-        delete listings[tokenId];
-        emit EmergencyWithdraw(tokenId);
-    }
    //******************************************************//
     //                    General  Fun                      //
     //******************************************************//
 
     function isTradeOngoing(uint256 tokenId) public view returns(bool){
         return (listings[tokenId].isActive && block.timestamp < listings[tokenId].endTime && block.timestamp >= listings[tokenId].startTime);
+    }
+
+    function _cancelTrade(uint256 tokenId) internal{
+        require(metadataContract.verifyToken(tokenId, _msgSender()), "Wrong owner or token be burned");
+        metadataContract.setSalesStatus(tokenId, false, uint256(SaleType.Minted), 0,0,0,0,0);
     }
 
     function _startTradeCheck(uint256 tokenId) internal view{
@@ -336,7 +315,6 @@ contract PokemonMarketplace is Ownable, ReentrancyGuard, AccessControl {
     function setAdmin(address _newAdmin) public onlyRole(ADMIN_ROLE) {
         _grantRole(DEFAULT_ADMIN_ROLE, _newAdmin); // default admin role
         _grantRole(ADMIN_ROLE, _newAdmin);         // set custom ADMIN_ROLE
-        metadataContract.setAdmin(_newAdmin);
     }
 
     //******************************************************//

@@ -20,11 +20,8 @@ import {
 } from '@ant-design/web3-wagmi';
 import { QueryClient } from '@tanstack/react-query';
 import { createConfig, http } from 'wagmi';
-import { mainnet, goerli, hardhat } from 'wagmi/chains';
+import { mainnet, hardhat } from 'wagmi/chains';
 import { walletConnect, injected } from 'wagmi/connectors';
-
-import { EthersWeb3ConfigProvider, useEthersProvider } from '@ant-design/web3-ethers';
-
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,7 +33,8 @@ const queryClient = new QueryClient({
 
 const config = createConfig({
     chains: [
-        // mainnet, goerli, 
+        mainnet, 
+        // goerli, 
         hardhat],
       transports: {
         // [mainnet.id]: http(),
@@ -78,80 +76,79 @@ console.log(hardhat.id)
 
 function App() {
   // const [count, setCount] = useState(0)
-
+    // {/* <WagmiProvider config={config}> */}
+    // {/* <QueryClientProvider client={queryClient}>  */}
+    
+    // {/* </QueryClientProvider>  */}
+    // {/* </WagmiProvider> */}
   return (
-    <WagmiWeb3ConfigProvider
-    eip6963={{
-      autoAddInjectedWallets: true,
-    }}
-  //   chains={[Mainnet, Hardhat, Localhost]}
-    chains={[Hardhat]}
-    config={config}
-    // ens
-  //   chains={[Mainnet, Hardhat]}
-  //   transports={{
-  //     [Mainnet.id]: http(),
-  //   }}
-  //   walletConnect={{
-  //     projectId: YOUR_WALLET_CONNECT_PROJECT_ID,
-  //   }}
-    wallets={[
-      MetaMask(),
-      WalletConnect()
-    ]}
-    queryClient={queryClient}
-  >
-    <AntdApp>
-      <BrowserRouter>
-        <Layout style={{ }} className = "layout">
-          <div
-            style={{
-              position: 'sticky',
-              top: 0,
-              zIndex: 1,
-              width: '100%',
-              display: 'flex',
-              // alignItems: 'center',
-              justifyContent:"center",
-              height:"40px",
-              // backgroundColor:"black"
-            }}
-          >
-            <Navigation/>
-          </div>
 
-          <Content
-            style={{
-              // padding: '40px 0',
-              // marginTop:"10px"
-              // paddingTop:"30px"
-            }}
-          >
+    <WagmiWeb3ConfigProvider
+      eip6963={{
+        autoAddInjectedWallets: true,
+      }}
+      ens
+      config={config}
+      chains={[Mainnet, Hardhat]}
+      wallets={[
+        MetaMask(),
+        WalletConnect()
+      ]}
+      queryClient={queryClient}
+    > 
+      <AntdApp>
+        <BrowserRouter>
+          <Layout style={{ }} className = "layout">
             <div
               style={{
-                // padding: 5,
-                minHeight: 500,
-                maxWidth:"100vw",
-                overFlow:"hidden"
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                width: '100%',
+                display: 'flex',
+                // alignItems: 'center',
+                justifyContent:"center",
+                height:"40px",
+                // backgroundColor:"black"
               }}
             >
-              <Routing/>
+              <Navigation/>
             </div>
-          </Content>
 
-          <Footer
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            PokeAuction ©{new Date().getFullYear()} Created by Jacky TAM, Zhen YANG
-          </Footer>
-          <FloatButton.BackTop visibilityHeight={0}/>
-        </Layout>
-        
-      </BrowserRouter>
-    </AntdApp>
+            <Content
+              style={{
+                // padding: '40px 0',
+                // marginTop:"10px"
+                // paddingTop:"30px"
+              }}
+            >
+              <div
+                style={{
+                  // padding: 5,
+                  minHeight: 500,
+                  maxWidth:"100vw",
+                  overFlow:"hidden"
+                }}
+              >
+                <Routing/>
+              </div>
+            </Content>
+
+            <Footer
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              PokeAuction ©{new Date().getFullYear()} Created by Jacky TAM, Zhen YANG
+            </Footer>
+            <FloatButton.BackTop visibilityHeight={0}/>
+          </Layout>
+          
+        </BrowserRouter>
+      </AntdApp>
     </WagmiWeb3ConfigProvider>
+
+
   )
 }
 

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import './detailPage.css'
@@ -10,7 +10,7 @@ import {
 import { 
     Divider, Space, Splitter,
     Collapse, theme, Typography,
-    Statistic, Card, Tag,
+    Modal, Card, Tag,
     InputNumber, Rate, Button,
     ConfigProvider, notification, Skeleton, 
     Descriptions, Row, Col
@@ -29,12 +29,19 @@ import {get_trait} from "../../components/API/APIUtil.js"
 import * as CONSTANT_POKE from "../../components/common/CONSTANT.js"
 import NameTag from '../../components/common/nameTag.jsx';
 import PricePanel from '../../components/pricePanel/pricePanel.jsx';
-
+import PaymentPanel from '../../components/paymentPanel/paymentPanel.jsx';
+import DealActionPanel from '../../components/dealActionPanel/dealActionPanel.jsx';
+import { useNavigate } from 'react-router-dom';
+import TradeHistory from '../../components/eventTracePanel/tradeHistory.jsx';
+import UserContext from "../../components/Context/UserContext.js"
+import TradeListing from '../../components/eventTracePanel/tradeListing.jsx';
+ 
 const { Paragraph, Title, Text } = Typography;
 
 export default function CardDetailPage(){
+    const navigate = useNavigate();
     let { id } = useParams();
-    const { address } = useAccount(); // Ensure address is available
+    const {address, isPaused, isAdmin} = useContext(UserContext);
 
     const { token } = theme.useToken();
 
@@ -44,7 +51,8 @@ export default function CardDetailPage(){
 
     const [nftObj, setnftObj] = useState(CONSTANT_POKE.POKEMETADATA_BASE_OBJ)
 
-    const [order, setOrder] = useState({})
+    const [inputUserPrice, setInputUserPrice] = useState(0)
+    const [openModal, setOpenModal] = useState(false)
 
     const getACardData = useReadContract({
         address: CONSTANT_POKE.POKEMONCARD_CONTRACT,
@@ -52,17 +60,18 @@ export default function CardDetailPage(){
         chainId: CONSTANT_POKE.HARDHAT_ID,
         functionName: "getACard", 
         enabled: !!address, 
-        args:[1]
+        args:[id]
     });
     
-    console.log(id)
-    console.log(getACardData)
-    console.log(getACardData.isError)
-    console.log(getACardData.isLoading)
-
- 
+    // console.log(id)
+    // console.log(getACardData)
+    // console.log(getACardData.isError)
+    // console.log(getACardData.isLoading)
 
     useEffect(()=>{
+        if(getACardData.isSuccess&&getACardData.data.tokenId==0){
+            navigate("/main/tokenNotFound")
+        }
         if(!getACardData.isLoading && !getACardData.isError){
             setnftObj(getACardData.data);
             api_getTrait(getACardData.data.tokenTraitCID)
@@ -74,21 +83,11 @@ export default function CardDetailPage(){
     function api_getTrait(url){
         get_trait(url).then(function(res){
           if(res.status >= 200 && res.status < 300 ){
-            console.log(res)
+            // console.log(res)
             setTrait(res.data)
           }
         })
       }
-
-    function openNotification(pauseOnHover, type){
-      api[type]({
-        message: 'Notification Title',
-        description:
-          'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-        showProgress: true,
-        pauseOnHover,
-      });
-    };
 
     const panelStyleLeft = {
         // marginBottom: 30,
@@ -177,51 +176,28 @@ export default function CardDetailPage(){
     }
 
     function getCollapseItemRight(){
-        var priceHistory = (
-            <StatisticCard
-            chartPlacement="right"
-            statistic={{
-              title: 'Current Best Price',
-              value: 112893,
-              precision: 2,
-              suffix: 'ETH',
-              description: (
-                <>
-                  {/* <Statistic title="周同比" value="6.47%" trend="up" />
-                  <Statistic title="月同比" value="6.47%" trend="down" /> */}
-                </>
-              ),
-            }}
-            style={{ width: 584 }}
-            chart={
-              <img
-                src="https://gw.alipayobjects.com/zos/alicdn/snEBTn9ax/zhexiantuchang.svg"
-                alt="折线图"
-                width="100%"
-              />
-            }
-          />
-        )
         return [
             {
                 key: '1',
                 label: 'Price History',
-                children: priceHistory,
+                children: <TradeHistory incomeId={id}/>,
                 style: panelStyleRight
             },
             {
                 key: '2',
-                label: 'Bids',
-                children: <p>sss</p>,
-                style: panelStyleRight
-            },
-            {
-                key: '3',
-                label: 'Listings',
-                children: <p>sss</p>,
+                label: 'Order History',
+                children: <TradeListing incomeId={id}/>,
                 style: panelStyleRight
             }
         ]
+    }
+
+    function updateInputUserPrice(price){
+        setInputUserPrice(price)
+    }
+
+    function modalControl(state){
+        setOpenModal(state)
     }
 
     return(
@@ -267,6 +243,7 @@ export default function CardDetailPage(){
                                     src={nftObj.tokenImageCID}
                                     // width={300}
                                 />
+
                             </Space>
                         </div>
                         
@@ -311,6 +288,13 @@ export default function CardDetailPage(){
                             >
                                 {"#" + parseInt(nftObj.tokenId)}
                             </Tag>
+                            
+
+                            <br/>
+                            <Button color={CONSTANT_POKE.SALE_TYPE_COLOR[nftObj['cardStatus']]} variant="filled">
+                                    {CONSTANT_POKE.SALE_TYPE[nftObj['cardStatus']]}
+                            </Button>
+                            <br/>
                             <br/>
                             <Text
                                 style={{fontSize:"15px"}}
@@ -334,9 +318,15 @@ export default function CardDetailPage(){
                                 {"Card Number: " + (trait.attributes[4]?trait.attributes[4].value:"000") + "/250"}
                             </Text>
                         </div>
-    
-                        <PricePanel onlyPrice={false} id={parseInt(nftObj.tokenId)}/>
-    
+                        {address==nftObj.owner||isAdmin?<DealActionPanel metaData={nftObj}/>:""}
+                        {nftObj.cardStatus!=3?(
+                            <PricePanel 
+                                onlyPrice={false} 
+                                id={parseInt(nftObj.tokenId)}
+                                updateInputUserPrice={updateInputUserPrice}
+                                modalControl={modalControl}
+                            />
+                        ):""}
     
                         <Collapse
                             size="large"
@@ -357,7 +347,24 @@ export default function CardDetailPage(){
                 </Splitter>
 
         )}
+        {openModal&&inputUserPrice!=0?
+            <Modal 
+                open={openModal} 
+                footer={null} 
+                width={"80%"}
+                
+                onCancel={()=>{modalControl(false)}}
+            >
+                <div >
+                    <PaymentPanel 
+                        closeModal={modalControl}
+                        idd = {id}
+                        userPrice = {inputUserPrice}
+                        objTrait={trait}
+                    />
+                </div>
 
+            </Modal>:""}
         <Divider/>
         </div>
     )

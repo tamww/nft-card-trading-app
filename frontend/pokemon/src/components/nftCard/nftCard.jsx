@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react'
 import { 
-    CryptoPrice, NFTImage
+    NFTImage
 } from '@ant-design/web3'
-import { EditOutlined, HeartFilled, HeartOutlined } from '@ant-design/icons';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import {
     theme, message, Card,
-    Button, ConfigProvider
+    Button, ConfigProvider, Tag
 } from 'antd'
 
 import { createStyles } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { BitcoinCircleColorful } from '@ant-design/web3-icons';
 import {get_trait} from "../API/APIUtil.js"
-import axios from 'axios';
-
+import * as CONSTANT_POKE from "../common/CONSTANT.js"
 import './nftCard.css'
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
@@ -45,7 +44,7 @@ const useStyle = createStyles(({ prefixCls, css }) => ({
 
 
 export default function NCard(prop){
-    let{ item, dark } = prop;
+    let{ item, dark, viewOnly } = prop;
     
     // console.log(item)
     // console.log(dark)
@@ -99,11 +98,11 @@ export default function NCard(prop){
     }
 
     return(
-    <ConfigProvider 
-    button={{
-        className: styles.linearGradientButton,
-      }}
-    >
+      <ConfigProvider 
+        button={{
+            className: styles.linearGradientButton,
+          }}
+      >
         <Card
             hoverable
             className="nftCard"
@@ -117,7 +116,7 @@ export default function NCard(prop){
                 />
             }
             actions=
-                {inCart?(
+                {!viewOnly?(inCart?(
                     [
                         <Button key="setting" color="primary" variant="text">Buy Now</Button>,
                         // {inCart?("s"):('s')}
@@ -129,15 +128,28 @@ export default function NCard(prop){
                         // {inCart?("s"):('s')}
                         <HeartOutlined onClick={()=>addToCart()} key="addCart"/>
                     ]
-                )}
+                )):<></>}
         >
             <Meta
                 onClick={()=>showCardDetail(parseInt(item.tokenId))}
                 // avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
                 title={trait.name}
-                // description={<CryptoPrice icon={<BitcoinCircleColorful />} value={BigInt(item.price)} />}
+                description={<div style={{ width: "250px", display: "flex", flexWrap: "wrap" }}>
+                  {trait.attributes?(
+                      trait.attributes[0]?
+                      trait.attributes[0].value.map((item, index)=>{
+                          return(
+                              <Tag key={'tag_trait'+index} bordered={false} color={(CONSTANT_POKE.TYPE_COLOR)[item]?(CONSTANT_POKE.TYPE_COLOR)[item]:"blue"}>
+                              {item}
+                              </Tag>
+                          )
+                      })
+                      :(
+                          <Tag bordered={false} color="blue">{" No Valid Type "}</Tag>
+                      )):""}</div>}
             />
         </Card>
+        
     </ConfigProvider>
     )
 }

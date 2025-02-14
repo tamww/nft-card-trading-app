@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./ERC721URIStorage.sol";
-import "hardhat/console.sol";
+// import "./hardhat/console.sol";
 
 contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -49,9 +49,9 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     uint256 public tokenBurned = 0;
     mapping(uint256 => bool) public burnedCoin;
     mapping(uint256 => Card) public pokemonMetadata;
-    mapping(address => uint256) public userTokenCount;
+
     address private auctionAddr;
-    address public immutable predefinedOwner;
+    
     //******************************************************//
     //                      Modifier                        //
     //******************************************************//
@@ -64,18 +64,12 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     //                initialization                        //
     //******************************************************//
     // constructor Ownable
-    constructor(string memory baseURIS, address _predefinedOwner) 
+    constructor(string memory baseURIS) 
         ERC721("PokemonCard", "PKMN")   // initialize ERC721
-        Ownable(_predefinedOwner)             // owner address
+        Ownable(msg.sender)             // owner address
     {        
-        _grantRole(DEFAULT_ADMIN_ROLE, _predefinedOwner); // default admin role
-        _grantRole(ADMIN_ROLE, _predefinedOwner);         // set custom ADMIN_ROLE
-        predefinedOwner = _predefinedOwner;
-        require(_predefinedOwner != address(0), "Invalid owner address");
-        
-        // Verify ownership initialization
-        require(owner() == _predefinedOwner, "Ownership setup failed");
-        setApprovalForAll(_predefinedOwner, true);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender); // default admin role
+        _grantRole(ADMIN_ROLE, msg.sender);         // set custom ADMIN_ROLE
         setBaseURI(baseURIS);
         // https://maroon-tricky-firefly-471.mypinata.cloud/ipfs/
         // tokenCounter = 0;
@@ -120,8 +114,8 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         string memory traitCID, 
         string memory imageCID
     ) private returns (uint256) {
-        _validateCID(traitCID);
-        _validateCID(imageCID);
+        // _validateCID(traitCID);
+        // _validateCID(imageCID);
 
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
@@ -142,8 +136,8 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         );
 
         // _setTokenURI(tokenId, string(abi.encodePacked("ipfs://", ipfsCID)));
+
         burnedCoin[tokenId] = false;
-        userTokenCount[msg.sender]++;
 
         emit MintPokeToken(id);
 
@@ -153,37 +147,16 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     /// @notice verify CID
     function _validateCID(string memory cid) private pure {
         bytes memory cidBytes = bytes(cid);
-        uint256 len;
-        uint256 i = 0;
-        uint256 bytelength = bytes(cidBytes).length;
-
-        for (len = 0; i < bytelength; len++) {
-            bytes1 b = bytes(cid)[i];
-            if (b < 0x80) {
-                i += 1;
-            } else if (b < 0xE0) {
-                i += 2;
-            } else if (b < 0xF0) {
-                i += 3;
-            } else if (b < 0xF8) {
-                i += 4;
-            } else if (b < 0xFC) {
-                i += 5;
-            } else {
-                i += 6;
-            }
-        }
-        // console.log(len);
-        require(len == 59, "Invalid CIDv1 length");
-        // require(bytes4(cidBytes[0:4]) == bytes4("bafy"), "Invalid CIDv1 prefix");
+        require(cidBytes.length == 46, "Invalid CID length");
+        require(cidBytes[0] == 'Q' && cidBytes[1] == 'm', "Invalid CID prefix");
     }
 
     //******************************************************//
     //                    Burn                              //
     //******************************************************//
     function burn(uint256 _tokenId, address callerAddr) external virtual nonReentrant {
-        require(_isApprovedOrOwner(callerAddr, _tokenId), "Not owner nor approved");
-        tokenBurned++;
+        require(_msgSender() == callerAddr && _isApprovedOrOwner(callerAddr, _tokenId), "Not owner nor approved");
+        tokenBurned += 1;
         _burn(_tokenId);
         burnedCoin[_tokenId] = true;
         pokemonMetadata[_tokenId].cardStatus = SaleType.Burned;
@@ -192,17 +165,13 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     }
 
     function changeOwnership(address originalOwner, address newOwner, uint256 _tokenID) external marketIsOpen nonReentrant{
-        require(_msgSender() == auctionAddr, "invalid owner");
-        transferFrom(originalOwner, newOwner, _tokenID);
-        if(newOwner!=address(auctionAddr)&&originalOwner!=address(auctionAddr)){
-            userTokenCount[originalOwner]--;
-            userTokenCount[newOwner]++;
-        }
-        // pokemonMetadata[_tokenID].owner = newOwner;
+        require(_msgSender() == auctionAddr && originalOwner == pokemonMetadata[_tokenID].owner, "invalid owner");
+        _safeTransfer(originalOwner, newOwner, _tokenID);
+        pokemonMetadata[_tokenID].owner = newOwner;
     }
 
     function verifyToken(uint256 _tokenID, address callerAddr)external view returns(bool){
-        return (callerAddr == ownerOf(_tokenID) &&callerAddr == pokemonMetadata[_tokenID].owner && !burnedCoin[_tokenID]);
+        return (callerAddr == pokemonMetadata[_tokenID].owner && !burnedCoin[_tokenID]);
     }
 
     //******************************************************//
@@ -215,7 +184,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         }
         uint256 key = 0;
         for (uint256 i = 1; i <= _tokenIdCounter.current(); i++) {
-            if(withoutBurn && burnedCoin[i] && pokemonMetadata[i].cardStatus==SaleType.Burned){
+            if(withoutBurn && burnedCoin[i]){
                 continue;
             }
             tokensId[key] = pokemonMetadata[i];
@@ -225,25 +194,28 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         return tokensId;
     }
 
-    function walletOfUserItem(address _user, bool withoutBurn) external view returns (Card[] memory) {
-        Card[] memory tokensId = new Card[](userTokenCount[_user]);
+    function walletOfUserItem(address _user) external view returns (Card[] memory) {
+        uint256 tokenCount = balanceOf(_user);
+        Card[] memory tokensId = new Card[](tokenCount);
+
+        if(tokenCount == 0){
+            return tokensId;
+        }
+
         uint256 key = 0;
-        for (uint256 i = 1; i <=  MAX_ELEMENTS; i++) {
-            if(burnedCoin[i] && withoutBurn && pokemonMetadata[i].cardStatus==SaleType.Burned) {
-                continue;
-            }
-            if(pokemonMetadata[i].owner == _user){
+        for (uint256 i = 1; i <= MAX_ELEMENTS; i++) {
+            if(ownerOf(i) == _user){
                 tokensId[key] = pokemonMetadata[i];
                 key++;
-                if(key == userTokenCount[_user]){break;}
+                if(key == tokenCount){break;}
             }
         }
-        // console.log(tokensId);
+
         return tokensId;
     }
 
     function walletOfUser(address _user) external view returns (uint256[] memory) {
-        uint256 tokenCount = userTokenCount[_user];
+        uint256 tokenCount = balanceOf(_user);
         uint256[] memory tokensId = new uint256[](tokenCount);
 
         if(tokenCount == 0){
@@ -252,7 +224,7 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
 
         uint256 key = 0;
         for (uint256 i = 1; i <= MAX_ELEMENTS; i++) {
-            if(pokemonMetadata[i].owner == _user){
+            if(ownerOf(i) == _user){
                 tokensId[key] = i;
                 key++;
                 if(key == tokenCount){break;}
@@ -307,13 +279,11 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
     }
 
     function setAdmin(address _newAdmin) public onlyRole(ADMIN_ROLE) {
-        setApprovalForAll(_newAdmin, true);
         _grantRole(DEFAULT_ADMIN_ROLE, _newAdmin); // default admin role
         _grantRole(ADMIN_ROLE, _newAdmin);         // set custom ADMIN_ROLE
     }
 
     function setSalesStatus(
-        address _owner,
         uint256 tokenId, 
         bool _isOnSale, 
         uint256 _cardStatus,
@@ -326,7 +296,6 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         require(_msgSender() == auctionAddr, "invalid caller");
         pokemonMetadata[tokenId].isOnSale = _isOnSale;
         pokemonMetadata[tokenId].cardStatus = SaleType(_cardStatus);
-        pokemonMetadata[tokenId].owner = _owner;
 
         pokemonMetadata[tokenId].startTime = startTime;
         pokemonMetadata[tokenId].endTime = endTime;
@@ -343,4 +312,3 @@ contract PokemonCard is ERC721URIStorage, Ownable, ReentrancyGuard, AccessContro
         return super.supportsInterface(interfaceId);
     }
 }
-
