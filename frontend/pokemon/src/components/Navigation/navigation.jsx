@@ -40,14 +40,14 @@ const navList = [
         key:"4",
         label:"My Card",
         path:"/main/myCard"
-    },
-    {
-        key:"5",
-        label:"Admin",
-        path:"/main/admin"
-    },
+    }
 ]
 
+const adminObj =     {
+    key:"5",
+    label:"Admin",
+    path:"/main/admin"
+}
 
 export default function Navigation (){
     const { address } = useAccount(); // Ensure address is available
@@ -69,11 +69,13 @@ export default function Navigation (){
       });
     
     useEffect(()=>{
-        console.log(isAdmin)
-        // if(!isAdmin){
-        //     setNavItem(navList.filter(x=>x.label!="Admin"))
-        // }
-    }, [isAdmin])
+        // console.log(isAdmin)
+        if(!isAdmin){
+            setNavItem(navList)
+        }else{
+            setNavItem(navList.concat(adminObj))
+        }
+    }, [isAdmin, address, pausedEvent])
     useEffect(()=>{
         if(window.location.pathname !== "/main"){
             var _item = navItem.slice(1).filter(x=> window.location.pathname.startsWith(x.path))[0]

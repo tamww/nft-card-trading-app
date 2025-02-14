@@ -64,7 +64,9 @@ export default function DealActionPanel(prop){
         }) 
       };
     // console.log(metaData)
-
+    // console.log(error)
+    // console.log(res)
+    // console.log(hash)
     const adjustPanel = async (values, event) =>{
         setShowEndPrice(values==1)
     }
@@ -90,7 +92,7 @@ export default function DealActionPanel(prop){
             abi: CONSTANT_POKE.ABI_POKE_MARKET,
             functionName: 'cancelListing',
             chainId: CONSTANT_POKE.HARDHAT_ID,
-            enabled: !!address, 
+            enabled: !!address&&ops==2, 
             args: [metaData.tokenId]
         }) 
     }
@@ -103,7 +105,7 @@ export default function DealActionPanel(prop){
             abi: CONSTANT_POKE.ABI_POKE_MARKET,
             functionName: 'emergencyWithdraw',
             chainId: CONSTANT_POKE.HARDHAT_ID,
-            enabled: !!address, 
+            enabled: !!address&&ops==4, 
             args: [metaData.tokenId]
         }) 
     }
@@ -148,8 +150,8 @@ export default function DealActionPanel(prop){
             errorMessage(error)
             // console.log(error)
             setTimeout(() => {
-                setOpen(false);
-                window.location.reload();
+                // setOpen(false);
+                // window.location.reload();
             }, 1000);
         }
     },[res, isConfirmed, error])
@@ -162,7 +164,7 @@ export default function DealActionPanel(prop){
     function wihtdrawCard(){
         setLoadingYes(true)
         setOps(3)
-        console.log(address)
+        // console.log(address)
         writeContract({
             address: CONSTANT_POKE.POKEMONCARD_CONTRACT,
             abi: CONSTANT_POKE.ABI_POKE_CARD,
